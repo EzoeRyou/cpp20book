@@ -125,6 +125,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#vectorに対するリスト推定">vectorに対するリスト推定</a></li>
 <li><a href="#初期化子つきrange-based-for">初期化子つきrange-based for</a></li>
 <li><a href="#adlと見えない関数テンプレート">ADLと見えない関数テンプレート</a></li>
+<li><a href="#デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和">デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和</a></li>
+<li><a href="#特殊化におけるアクセスチェック">特殊化におけるアクセスチェック</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -501,5 +503,62 @@ F( 0 ) </code></pre>
 <a class="sourceLine" id="cb45-15" title="15">    f&lt;ns::s&gt;( ns::s{} ) ;</a>
 <a class="sourceLine" id="cb45-16" title="16">}</a></code></pre></div>
 <p>この場合、’::f’は関数名ではないので、追加のADLは行われず、名前<code>f</code>はint型の変数xになる。この文脈では違法なので、結果は違法になる。</p>
+<h2 id="デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和">デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和</h2>
+<p>この変更は重要だが、平均的なC++プログラマーは詳細を知る必要がないので、読み飛ばしてもよい。</p>
+<p>仮引数の型が非constなリファレンスのコピーコンストラクターを持つクラスがある。</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">struct</span> A</a>
+<a class="sourceLine" id="cb46-2" title="2">{</a>
+<a class="sourceLine" id="cb46-3" title="3">    A() = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb46-4" title="4">    <span class="co">// 仮引数の型が非constなリファレンスの</span></a>
+<a class="sourceLine" id="cb46-5" title="5">    <span class="co">// コピーコンストラクター</span></a>
+<a class="sourceLine" id="cb46-6" title="6">    A( A &amp; ) { }</a>
+<a class="sourceLine" id="cb46-7" title="7">} ;</a></code></pre></div>
+<p>このようなクラスを基本クラスやメンバーにもつクラスがある。</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb47-1" title="1"><span class="co">// 基本クラスに持つ</span></a>
+<a class="sourceLine" id="cb47-2" title="2"><span class="kw">struct</span> B : A { } ;</a>
+<a class="sourceLine" id="cb47-3" title="3"><span class="co">// メンバーに持つ</span></a>
+<a class="sourceLine" id="cb47-4" title="4"><span class="kw">struct</span> C { A a } ;</a></code></pre></div>
+<p>このとき、クラスB, Cが、仮引数の型がconstなリファレンスのdefault化されたコピーコンストラクターを持つとき、C++17ではたとえB, Cをコピーしなくても、結果の型は違法になる。</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb48-1" title="1"><span class="kw">struct</span> C</a>
+<a class="sourceLine" id="cb48-2" title="2">{</a>
+<a class="sourceLine" id="cb48-3" title="3">    A a ;</a>
+<a class="sourceLine" id="cb48-4" title="4">    C() = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb48-5" title="5">    C( <span class="at">const</span> C &amp; ) = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb48-6" title="6">}</a>
+<a class="sourceLine" id="cb48-7" title="7"></a>
+<a class="sourceLine" id="cb48-8" title="8"><span class="co">// C++17では違法</span></a>
+<a class="sourceLine" id="cb48-9" title="9">C c ;</a></code></pre></div>
+<p>理由は、const修飾子が異なるからだ。たとえクラスが実際にはコピーされていないとしても違法になる。</p>
+<p>このような制約は不必要に厳しいので、C++20では制限緩和が行われた。C++20では、このような場合、コピーしない限り合法となる。</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb49-1" title="1"><span class="co">// C++20では合法</span></a>
+<a class="sourceLine" id="cb49-2" title="2">C c ; </a>
+<a class="sourceLine" id="cb49-3" title="3"><span class="co">// C++20でも違法</span></a>
+<a class="sourceLine" id="cb49-4" title="4">C copy = c ;</a></code></pre></div>
+<p>この制限緩和の恩恵を最も受けるのは<code>std::tuple</code>だ。この制限緩和によって、<code>std::tuple</code>が使いやすくなる。</p>
+<h2 id="特殊化におけるアクセスチェック">特殊化におけるアクセスチェック</h2>
+<p>以下のようなコードを考える</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb50-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb50-2" title="2"><span class="kw">struct</span> traits ;</a>
+<a class="sourceLine" id="cb50-3" title="3"></a>
+<a class="sourceLine" id="cb50-4" title="4"><span class="kw">class</span> <span class="va">class_</span> {</a>
+<a class="sourceLine" id="cb50-5" title="5">    <span class="co">// プライベートなネストされたクラス</span></a>
+<a class="sourceLine" id="cb50-6" title="6">    <span class="kw">class</span> impl ;</a>
+<a class="sourceLine" id="cb50-7" title="7">} ;</a>
+<a class="sourceLine" id="cb50-8" title="8"></a>
+<a class="sourceLine" id="cb50-9" title="9"><span class="co">// 明示的特殊化</span></a>
+<a class="sourceLine" id="cb50-10" title="10"><span class="kw">template</span> &lt; &gt;</a>
+<a class="sourceLine" id="cb50-11" title="11"><span class="kw">struct</span> trait&lt; <span class="va">class_</span>::impl &gt; ;</a></code></pre></div>
+<p>このコードはC++17までは規格の文面を厳密に解釈するとprivateなネストされたクラスを使っているので違法であった。しかし、現実の主要なC++コンパイラーはすべてこのコードにアクセスチェックをせず通してしまうし、またこのようなコードには利用価値があるので、C++20では規格で正式に合法化された。</p>
+<p>部分的特殊化も合法化された。</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb51-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb51-2" title="2"><span class="kw">struct</span> traits ;</a>
+<a class="sourceLine" id="cb51-3" title="3"></a>
+<a class="sourceLine" id="cb51-4" title="4"><span class="kw">class</span> <span class="va">class_</span> {</a>
+<a class="sourceLine" id="cb51-5" title="5">    <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb51-6" title="6">    <span class="kw">struct</span> impl ;</a>
+<a class="sourceLine" id="cb51-7" title="7">} ;</a>
+<a class="sourceLine" id="cb51-8" title="8"></a>
+<a class="sourceLine" id="cb51-9" title="9"><span class="kw">template</span> &lt; <span class="kw">typename</span> U &gt;</a>
+<a class="sourceLine" id="cb51-10" title="10"><span class="kw">struct</span> trait&lt; <span class="va">class_</span>::impl&lt;U&gt; &gt; ;</a></code></pre></div>
 </body>
 </html>
