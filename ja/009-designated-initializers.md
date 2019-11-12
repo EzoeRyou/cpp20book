@@ -1,4 +1,4 @@
-# 指示初期化子(designated-initializers)
+## 指示初期化子(designated-initializers)
 
 指示初期化子(designated-initializers)はC99で追加された機能だ。C++20にはC99よりも機能を制限した指示初期化子が追加された。
 

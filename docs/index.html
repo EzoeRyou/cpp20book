@@ -105,7 +105,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </style>
 </head>
 <body>
-<header>
+<header id="title-block-header">
 <h1 class="title">江添亮の詳説C++20</h1>
 <p class="author">江添亮</p>
 <p class="date">2019-08-08</p>
@@ -120,9 +120,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#ラムダキャプチャー-thisの制限緩和">ラムダキャプチャー、<code>[=, this]</code>の制限緩和</a></li>
 <li><a href="#による暗黙のthisのキャプチャーの廃止予定"><code>[=]</code>による暗黙のthisのキャプチャーの廃止予定</a></li>
 <li><a href="#va_opt__"><code>__VA_OPT__</code></a></li>
-</ul></li>
-<li><a href="#指示初期化子designated-initializers">指示初期化子(designated-initializers)</a><ul>
-<li><a href="#ラムダ式に従来のテンプレート文法の追加">ラムダ式に従来のテンプレート文法の追加</a></li>
+<li><a href="#指示初期化子designated-initializers">指示初期化子(designated-initializers)</a></li>
+<li><a href="#ラムダ式に馴染み深いテンプレート文法の追加">ラムダ式に馴染み深いテンプレート文法の追加</a></li>
+<li><a href="#vectorに対するリスト推定">vectorに対するリスト推定</a></li>
+<li><a href="#初期化子つきrange-based-for">初期化子つきrange-based for</a></li>
+<li><a href="#adlと見えない関数テンプレート">ADLと見えない関数テンプレート</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -263,7 +265,7 @@ F( 0, 1, 2, 3 )
 // __VA_ARGS__は空
 F( 0 ) </code></pre>
 <p>これによって選択的にカンマのようなトークン列に置換させることができ、ゼロ個の引数に対応した可変引数マクロを作ることができる。</p>
-<h1 id="指示初期化子designated-initializers">指示初期化子(designated-initializers)</h1>
+<h2 id="指示初期化子designated-initializers">指示初期化子(designated-initializers)</h2>
 <p>指示初期化子(designated-initializers)はC99で追加された機能だ。C++20にはC99よりも機能を制限した指示初期化子が追加された。</p>
 <p>指示初期化子とは、クラスのオブジェクトのリスト初期化において、クラスの非staticデータメンバーの名前を記述できる機能だ。</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">struct</span> S { <span class="dt">int</span> x, y, z ; } ;</a>
@@ -299,8 +301,205 @@ F( 0 ) </code></pre>
 <a class="sourceLine" id="cb17-4" title="4"><span class="co">// C++20では違法</span></a>
 <a class="sourceLine" id="cb17-5" title="5">S s{ .x = <span class="dv">0</span>, <span class="dv">1</span> } ;</a></code></pre></div>
 <p>このような制限がある理由としては、C++ではオブジェクトの破棄は構築の逆順に行われ、初期化リストの要素の評価は表記順に行われるために、指示初期化子でも宣言順に記述しなければならない制限が加えられた。配列の指示初期化子はラムダ式と文法が衝突するために採用されなかった。指示初期化子のネストはC99でもまれにしか使われていないので採用されなかった。</p>
-<h2 id="ラムダ式に従来のテンプレート文法の追加">ラムダ式に従来のテンプレート文法の追加</h2>
-<p>C++20ではラムダ式に従来のテンプレートの文法に近いテンプレートパラメーターの記述ができるようになった。</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb18-1" title="1">[]&lt;<span class="kw">typename</span> T&gt;(T x ) { <span class="cf">return</span> x ; } ;</a></code></pre></div>
+<h2 id="ラムダ式に馴染み深いテンプレート文法の追加">ラムダ式に馴染み深いテンプレート文法の追加</h2>
+<p>C++20ではラムダ式に従来のテンプレートの文法によく似た馴染み深いテンプレートパラメーターの記述ができるようになった。</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb18-1" title="1">[]&lt;<span class="kw">typename</span> T&gt;( T x ) { <span class="cf">return</span> x ; } ;</a></code></pre></div>
+<p>このラムダ式と同等のものを関数テンプレート風に書くと以下のようになる。</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">auto</span> f( T x )</a>
+<a class="sourceLine" id="cb19-3" title="3">{</a>
+<a class="sourceLine" id="cb19-4" title="4">    <span class="cf">return</span> x ;</a>
+<a class="sourceLine" id="cb19-5" title="5">}</a></code></pre></div>
+<p>文法は、ラムダ式のラムダ導入子(lambda-introducer, <code>[]</code>)とラムダ宣言子(仮引数リストなど)の間に、テンプレート仮引数リストを書く。</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb20-1" title="1">[]              <span class="co">// ラムダ導入子</span></a>
+<a class="sourceLine" id="cb20-2" title="2">&lt; <span class="kw">typename</span> T &gt;  <span class="co">// テンプレート仮引数リスト</span></a>
+<a class="sourceLine" id="cb20-3" title="3">( T x )         <span class="co">// ラムダ宣言子</span></a>
+<a class="sourceLine" id="cb20-4" title="4">{ }             <span class="co">// 複合文</span></a></code></pre></div>
+<p>この文法を導入した理由は2つある。</p>
+<p>1つには、テンプレート仮引数リストが書けない場合、関数テンプレートとは同じように書けないラムダ式が存在することへの対処だ。</p>
+<p>例えば以下の関数テンプレートを考える。</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="kw">auto</span> f( T x, T y )</a>
+<a class="sourceLine" id="cb21-3" title="3">{ <span class="cf">return</span> x + y ; }</a></code></pre></div>
+<p>この関数テンプレートと同等のラムダ式書こうとして、以下のように書いた場合、</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb22-1" title="1">[]( <span class="kw">auto</span> x, <span class="kw">auto</span> y ){ <span class="cf">return</span> x + y }</a></code></pre></div>
+<p>これは厳密に同じ意味ではない。以下のような関数テンプレートを書いたものと同じになる。</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T, <span class="kw">typename</span> U &gt;</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="kw">auto</span> lambda( T x, U y )</a>
+<a class="sourceLine" id="cb23-3" title="3">{ <span class="cf">return</span> x + y ; }</a></code></pre></div>
+<p>元々の関数のx, yは同じ型になるが、ラムダ式のx,yの型はそれぞれ別になりうる。ラムダ式に馴染み深いテンプレートの文法を導入することで、関数テンプレートとラムダ式が同じ表現力を持つようになる。</p>
+<p>もう一つの導入理由としては、制約テンプレートだ。コンセプトA, B, Cを同時に満たす制約テンプレートを関数テンプレートで書くと以下のようになる。</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb24-2" title="2">    <span class="kw">requires</span> A&lt;T&gt; &amp;&amp; B&lt;T&gt; &amp;&amp; C&lt;T&gt;</a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="dt">void</span> f( T x ) { }</a></code></pre></div>
+<p>このような制約テンプレートを従来のラムダ式で書くには、まずコンセプトA, B, Cを満たすコンセプトを定義し、そのコンセプトを使わなければならない。</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">concept</span> ABC = A&lt;T&gt; &amp;&amp; B&lt;T&gt; &amp;&amp; C&lt;T&gt; ;</a>
+<a class="sourceLine" id="cb25-3" title="3"></a>
+<a class="sourceLine" id="cb25-4" title="4">[]( ABC <span class="kw">auto</span> x ) { } ;</a></code></pre></div>
+<p>C++20では、ラムダ式に従来のテンプレートの文法が使えるようになったので、以下のように書くことができる。</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb26-1" title="1">[]</a>
+<a class="sourceLine" id="cb26-2" title="2">&lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb26-3" title="3">    <span class="kw">requires</span> A&lt;T&gt; &amp;&amp; B&lt;T&gt; &amp;&amp; C&lt;T&gt;</a>
+<a class="sourceLine" id="cb26-4" title="4">( T x ) { } ;</a></code></pre></div>
+<h2 id="vectorに対するリスト推定">vectorに対するリスト推定</h2>
+<p>この変更は規格上の不備を修正したもので、一般のC++プログラマーは知っていてもそれほど恩恵はない。結論だけを先に書くと、以下のようなコードで、</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb27-1" title="1"><span class="bu">std::</span>vector v { <span class="bu">std::</span>vector{<span class="dv">1</span>,<span class="dv">2</span>} } ;</a></code></pre></div>
+<p>変数<code>v</code>の型は<code>std::vector&lt;int&gt;</code>になる。</p>
+<p>C++17までの規格の文面は、このとき変数<code>v</code>の型が<code>std::vector&lt;std::vector&lt;int&gt;&gt;</code>になる解釈の余地を残していた。C++20ではそのような解釈の余地をなくした。</p>
+<p>C++11ではリスト初期化が追加された。クラスがリスト初期化されたとき、クラスのコンストラクターに初期化リストコンストラクターがある場合は、初期化リストコンストラクターがオーバーロード解決で優先して使われる。</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="kw">struct</span> vector</a>
+<a class="sourceLine" id="cb28-3" title="3">{</a>
+<a class="sourceLine" id="cb28-4" title="4">    <span class="co">// 初期化リストコンストラクター</span></a>
+<a class="sourceLine" id="cb28-5" title="5">    vector( <span class="bu">std::</span>initializer_list&lt;T&gt; l ) ;</a>
+<a class="sourceLine" id="cb28-6" title="6">    <span class="co">// コピーコンストラクター</span></a>
+<a class="sourceLine" id="cb28-7" title="7">    vector( <span class="at">const</span> vector &amp; other ) ;</a>
+<a class="sourceLine" id="cb28-8" title="8">} ;</a>
+<a class="sourceLine" id="cb28-9" title="9"></a>
+<a class="sourceLine" id="cb28-10" title="10"><span class="co">// 初期化リストコンストラクターが使われる</span></a>
+<a class="sourceLine" id="cb28-11" title="11">vector&lt;<span class="dt">int</span>&gt; v = {<span class="dv">123</span>} ;</a></code></pre></div>
+<p>C++17では、クラステンプレートのコンストラクターからの実引数推定が追加された。</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb29-1" title="1"><span class="co">// 初期化コンストラクターが使われる</span></a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="co">// vector&lt;int&gt;</span></a>
+<a class="sourceLine" id="cb29-3" title="3">vector v = {<span class="dv">123</span>} ;</a></code></pre></div>
+<p><code>vector&lt;T&gt;</code>のテンプレート仮引数<code>T</code>は、初期化リストコンストラクターの<code>std::initializer_list&lt;T&gt;</code>の<code>T</code>をテンプレート実引数として推定される。</p>
+<p>すると、以下の場合、</p>
+<pre class="cp++"><code>vector v = { vector{1,2} } ;</code></pre>
+<p><code>vector{1,2}</code>の型は<code>vector&lt;int&gt;</code>だ。<code>v</code>はリスト初期化されているので、初期化リストコンストラクターが使われる。このとき、<code>std::initializer_list&lt;T&gt;</code>の<code>T</code>は<code>vector&lt;int&gt;</code>、つまり<code>std::initializer_list&lt;vector&lt;int&gt;&gt;</code>となる。すると、変数<code>v</code>のクラステンプレート<code>vector&lt;T&gt;</code>の<code>T</code>は<code>vector&lt;int&gt;</code>となる。つまり、変数<code>v</code>の型は<code>vector&lt;vector&lt;int&gt;&gt;</code>となってしまう。</p>
+<p>この挙動は人間にとって不自然なので、この場合に<code>vector</code>のコピーコンストラクターが呼ばれ、<code>v</code>の型は<code>vector&lt;int&gt;</code>となることを明記した。</p>
+<p>具体的には、クラステンプレートのコンストラクターからの実引数推定が行われるときで、リスト初期化が使われ、かつリスト初期化の中の要素がひとつだけで、その要素の型が初期化されるクラステンプレートの特殊化であった場合は、初期化リストコンストラクターは選ばれない。</p>
+<p>つまり、以下のような場合で、</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb31-1" title="1">C x = { U{} } ;</a></code></pre></div>
+<p><code>C</code>がクラステンプレート、<code>U</code>が<code>C</code>の特殊化であった場合は、<code>C</code>の初期化リストコンストラクターは選ばれなくなる。</p>
+<h2 id="初期化子つきrange-based-for">初期化子つきrange-based for</h2>
+<p>Range-based forに初期化子を書けるようになった。</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb32-1" title="1"><span class="cf">for</span> ( <span class="kw">auto</span> x = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>} ; <span class="kw">auto</span> i : x )</a>
+<a class="sourceLine" id="cb32-2" title="2">    <span class="bu">std::</span>cout &lt;&lt; i ;</a></code></pre></div>
+<p>このコードは以下のような構造になっている。</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb33-1" title="1"><span class="cf">for</span> (                       <span class="co">// range-based for文</span></a>
+<a class="sourceLine" id="cb33-2" title="2">    <span class="kw">auto</span> x = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>} ;  <span class="co">// 初期化子</span></a>
+<a class="sourceLine" id="cb33-3" title="3">    <span class="kw">auto</span> i                  <span class="co">// for-range宣言</span></a>
+<a class="sourceLine" id="cb33-4" title="4">    :</a>
+<a class="sourceLine" id="cb33-5" title="5">    x )                     <span class="co">// for-range初期化子</span></a>
+<a class="sourceLine" id="cb33-6" title="6"><span class="bu">std::</span>cout &lt;&lt; i ;            <span class="co">// range-based for文の中の文</span></a></code></pre></div>
+<p><code>x</code>の型は<code>std::initializer_list&lt;int&gt;</code>で、<code>i</code>の型は<code>int</code>だ。</p>
+<p>通常のfor文やif文にあるような初期化子をrange-based for文にも書けるようにしたのがこの機能だ。</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb34-1" title="1"><span class="cf">if</span>  ( <span class="kw">auto</span> x = expr ; x ) ...</a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="cf">for</span> ( <span class="kw">auto</span> x = expr ; condition ; expr ) ... </a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="cf">for</span> ( <span class="kw">auto</span> x = expr ; <span class="kw">auto</span> i : x ) ...</a></code></pre></div>
+<p>具体的な使い方としては、メンバー関数<code>range</code>がRangeを返すような値を返す関数<code>f()</code>があった場合に、関数<code>f()</code>を呼び出した結果をrange-based for文で要素をイテレートしたい場合、従来ならば、</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb35-1" title="1"><span class="co">// メンバー関数rangeがRangeを返すような値となるクラス</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="kw">struct</span> R</a>
+<a class="sourceLine" id="cb35-3" title="3">{</a>
+<a class="sourceLine" id="cb35-4" title="4">    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; v ;</a>
+<a class="sourceLine" id="cb35-5" title="5">    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; &amp; range()</a>
+<a class="sourceLine" id="cb35-6" title="6">    { <span class="cf">return</span> v ; } </a>
+<a class="sourceLine" id="cb35-7" title="7">} ;</a>
+<a class="sourceLine" id="cb35-8" title="8">R f() ;</a>
+<a class="sourceLine" id="cb35-9" title="9"></a>
+<a class="sourceLine" id="cb35-10" title="10"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb35-11" title="11">{</a>
+<a class="sourceLine" id="cb35-12" title="12">    {</a>
+<a class="sourceLine" id="cb35-13" title="13">        <span class="kw">auto</span> r = f() ;</a>
+<a class="sourceLine" id="cb35-14" title="14">        <span class="cf">for</span> ( <span class="kw">auto</span> i : r.range() )</a>
+<a class="sourceLine" id="cb35-15" title="15">            <span class="bu">std::</span>cout &lt;&lt; i ;</a>
+<a class="sourceLine" id="cb35-16" title="16">    }</a>
+<a class="sourceLine" id="cb35-17" title="17">}</a></code></pre></div>
+<p>のように書いていたが、range-based for文に初期化子が書けるようになったので、</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb36-1" title="1"><span class="cf">for</span> ( <span class="kw">auto</span> r = f() ; <span class="kw">auto</span> i : r.range() )</a>
+<a class="sourceLine" id="cb36-2" title="2">    i ;</a></code></pre></div>
+<p>と書くことができる。</p>
+<p>ここで、</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb37-1" title="1"><span class="cf">for</span> ( <span class="kw">auto</span> i : f().range() )</a>
+<a class="sourceLine" id="cb37-2" title="2">    <span class="bu">std::</span>cout &lt;&lt; i ;</a></code></pre></div>
+<p>と書くのは誤りだ。なぜならば一時オブジェクトの寿命が付きているからだ。</p>
+<p>一時オブジェクトの寿命はその一時オブジェクトを生成した完全式の評価の終わりまでだ。ただし、一時オブジェクトがリファレンスに束縛された場合は、そのリファレンスの寿命似合わせて一時オブジェクトの寿命も延長される。</p>
+<p><code>f()</code>を評価した結果の一時オブジェクトはリファレンスに束縛されていないので、一時オブジェクトの寿命は完全式の評価が終了した時点で尽きる。具体的に説明すると、このrange-based forのfor-range初期化子は以下のようなコードのシンタックスシュガーとなるが、</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb38-1" title="1"><span class="kw">auto</span> &amp;&amp; range = f().range() ;</a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="kw">auto</span> begin = range.begin() ;</a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="kw">auto</span> end = range.end() ;</a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="cf">for</span> ( ; begin != end ; ++begin ) {</a>
+<a class="sourceLine" id="cb38-5" title="5">    <span class="kw">auto</span> i = * begin ;</a>
+<a class="sourceLine" id="cb38-6" title="6">    <span class="bu">std::</span>cout &lt;&lt; i ;</a>
+<a class="sourceLine" id="cb38-7" title="7">}</a></code></pre></div>
+<p>リファレンスrangeに束縛されている一時オブジェクトは、<code>f()</code>を評価した結果の一時オブジェクト(Rのオブジェクト)に対してメンバー関数<code>range()</code>呼び出しを評価した結果の一時オブジェクトだ。束縛されているのはRの一時オブジェクトの中のサブオブジェクト<code>std::vector&lt;int&gt;</code>へのlvalueリファレンスだが、Rの一時オブジェクトはリファレンスに束縛されていないので、完全式、この場合<code>f().range()</code>を評価し終わったタイミングで寿命が付きてしまう。</p>
+<p>そのために一度リファレンスに束縛して寿命延長するか、実際のオブジェクトを構築しなければならないが、</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb39-1" title="1">{</a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="co">// オブジェクトを構築</span></a>
+<a class="sourceLine" id="cb39-3" title="3"><span class="kw">auto</span> r = f() ;</a>
+<a class="sourceLine" id="cb39-4" title="4"><span class="co">// 寿命は付きない</span></a>
+<a class="sourceLine" id="cb39-5" title="5"><span class="cf">for</span> ( <span class="kw">auto</span> i : r.range() )</a>
+<a class="sourceLine" id="cb39-6" title="6">    ...</a>
+<a class="sourceLine" id="cb39-7" title="7">} <span class="co">// これ以降rは必要がないのでブロックスコープで囲む</span></a></code></pre></div>
+<p>そのための記述は面倒なので、</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb40-1" title="1"><span class="cf">for</span> ( <span class="kw">auto</span> r = f() ; <span class="kw">auto</span> i : r.range() )</a>
+<a class="sourceLine" id="cb40-2" title="2">    ...</a></code></pre></div>
+<p>range-based for文に初期化子が追加された。</p>
+<h2 id="adlと見えない関数テンプレート">ADLと見えない関数テンプレート</h2>
+<p>このC++20の変更はほとんどのC++プログラマーには関係がないので読み飛ばすことをおすすめする。</p>
+<p>関数テンプレート名に続いて<code>&lt;</code>がある場合、それはテンプレート実引数の指定だ。</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="dt">void</span> f() ;</a>
+<a class="sourceLine" id="cb41-3" title="3"></a>
+<a class="sourceLine" id="cb41-4" title="4">f&lt;<span class="dt">int</span>&gt;() ;</a></code></pre></div>
+<p>しかし、<code>&lt;</code>は比較演算子としても使われている。名前<code>f</code>が関数テンプレートではない場合は比較演算子として解釈される。</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb42-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb42-2" title="2">{</a>
+<a class="sourceLine" id="cb42-3" title="3">    <span class="dt">int</span> f = <span class="dv">0</span> ;</a>
+<a class="sourceLine" id="cb42-4" title="4">    f &lt; <span class="dv">1</span> ;</a>
+<a class="sourceLine" id="cb42-5" title="5">}</a></code></pre></div>
+<p>ここで、名前<code>f</code>は関数テンプレート名だが、ADL経由でしか見つからない場合を考える。</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb43-1" title="1"><span class="kw">namespace</span> NS {</a>
+<a class="sourceLine" id="cb43-2" title="2">    <span class="kw">struct</span> S { } ;</a>
+<a class="sourceLine" id="cb43-3" title="3">    <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb43-4" title="4">    <span class="co">// NS::f</span></a>
+<a class="sourceLine" id="cb43-5" title="5">    <span class="dt">void</span> f( S ) { }</a>
+<a class="sourceLine" id="cb43-6" title="6">}</a>
+<a class="sourceLine" id="cb43-7" title="7"></a>
+<a class="sourceLine" id="cb43-8" title="8"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb43-9" title="9">{</a>
+<a class="sourceLine" id="cb43-10" title="10">    <span class="co">// C++17では違法</span></a>
+<a class="sourceLine" id="cb43-11" title="11">    <span class="co">// C++20では合法</span></a>
+<a class="sourceLine" id="cb43-12" title="12">    f&lt;NS::S&gt;( NS::S{} ) ;</a>
+<a class="sourceLine" id="cb43-13" title="13">}</a></code></pre></div>
+<p>C++17ではこのコードにおける<code>f</code>に続く<code>&lt;</code>は比較演算子だとみなされ、このコードは違法になる。</p>
+<p>C++20ではルールが変更された。非修飾名に続いて<code>&lt;</code>がある場合で、通常の名前検索では名前が見つからないか、関数名が見つかった場合、その名前はテンプレート名だとみなされ、ADLが行われる。 したがって、上記のコードはC++20では合法になる。、非修飾名<code>f</code>は見つからないので、ADLが行われ、連想名前空間に<code>NS</code>があることにより、名前<code>NS::f</code>がADLにより発見される。後続の<code>&lt;</code>はテンプレート実引数の指定隣合法とみなされる。</p>
+<p>以下のような場合も、C++17では違法だが、C++20では合法なコードだ。</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb44-1" title="1"><span class="co">// 関数名::f</span></a>
+<a class="sourceLine" id="cb44-2" title="2"><span class="dt">void</span> f() { }</a>
+<a class="sourceLine" id="cb44-3" title="3"></a>
+<a class="sourceLine" id="cb44-4" title="4"><span class="kw">namespace</span> ns {</a>
+<a class="sourceLine" id="cb44-5" title="5">    <span class="kw">struct</span> s { } ;</a>
+<a class="sourceLine" id="cb44-6" title="6">    <span class="kw">template</span> &lt; <span class="kw">typename</span> t &gt;</a>
+<a class="sourceLine" id="cb44-7" title="7">    <span class="co">// ns::f</span></a>
+<a class="sourceLine" id="cb44-8" title="8">    <span class="dt">void</span> f( s ) { }</a>
+<a class="sourceLine" id="cb44-9" title="9">}</a>
+<a class="sourceLine" id="cb44-10" title="10"></a>
+<a class="sourceLine" id="cb44-11" title="11"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb44-12" title="12">{</a>
+<a class="sourceLine" id="cb44-13" title="13">    <span class="co">// c++17ではill-formed</span></a>
+<a class="sourceLine" id="cb44-14" title="14">    <span class="co">// c++20ではwell-formed</span></a>
+<a class="sourceLine" id="cb44-15" title="15">    f&lt;ns::s&gt;( ns::s{} ) ;</a>
+<a class="sourceLine" id="cb44-16" title="16">}</a></code></pre></div>
+<p>この場合、非修飾名<code>f</code>に対して通常の名前検索で、グローバル名前空間にある<code>::f</code>が見つかる。<code>::f</code>は関数名なので、後続する<code>&lt;</code>があるため、名前<code>f</code>はテンプレート名だとみなされる。テンプレート名は見つからないので続いてADLが行われ、’NS::f’が発見される。<code>::f</code>はテンプレート名ではないが、関数名なのでこのような挙動になる。ルールは「非修飾名に続いて<code>&lt;</code>があり、通常の名前検索で名前が見つからないか、関数名が見つかった場合は、その名前はテンプレート名とみなされる」だからだ。</p>
+<p>以下のような場合は違法だ。</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb45-1" title="1"><span class="co">// 非関数名::f</span></a>
+<a class="sourceLine" id="cb45-2" title="2"><span class="dt">int</span> x {} ;</a>
+<a class="sourceLine" id="cb45-3" title="3"></a>
+<a class="sourceLine" id="cb45-4" title="4"><span class="kw">namespace</span> ns {</a>
+<a class="sourceLine" id="cb45-5" title="5">    <span class="kw">struct</span> s { } ;</a>
+<a class="sourceLine" id="cb45-6" title="6">    <span class="kw">template</span> &lt; <span class="kw">typename</span> t &gt;</a>
+<a class="sourceLine" id="cb45-7" title="7">    <span class="co">// ns::f</span></a>
+<a class="sourceLine" id="cb45-8" title="8">    <span class="dt">void</span> f( s ) { }</a>
+<a class="sourceLine" id="cb45-9" title="9">}</a>
+<a class="sourceLine" id="cb45-10" title="10"></a>
+<a class="sourceLine" id="cb45-11" title="11"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb45-12" title="12">{</a>
+<a class="sourceLine" id="cb45-13" title="13">    <span class="co">// c++17ではill-formed</span></a>
+<a class="sourceLine" id="cb45-14" title="14">    <span class="co">// c++20でもill-formed</span></a>
+<a class="sourceLine" id="cb45-15" title="15">    f&lt;ns::s&gt;( ns::s{} ) ;</a>
+<a class="sourceLine" id="cb45-16" title="16">}</a></code></pre></div>
+<p>この場合、’::f’は関数名ではないので、追加のADLは行われず、名前<code>f</code>はint型の変数xになる。この文脈では違法なので、結果は違法になる。</p>
 </body>
 </html>
