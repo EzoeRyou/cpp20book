@@ -127,36 +127,89 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#adlと見えない関数テンプレート">ADLと見えない関数テンプレート</a></li>
 <li><a href="#デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和">デフォルト化されたコピーコンストラクターにおけるconst修飾子の違いを許容する制限緩和</a></li>
 <li><a href="#特殊化におけるアクセスチェック">特殊化におけるアクセスチェック</a></li>
+<li><a href="#デフォルト構築可能かつ代入可能なステートレスラムダ">デフォルト構築可能かつ代入可能なステートレスラムダ</a></li>
+<li><a href="#未評価文脈におけるラムダ式">未評価文脈におけるラムダ式</a><ul>
+<li><a href="#未評価文脈">未評価文脈</a></li>
+<li><a href="#ラムダ式と関数呼び出し式の違い">ラムダ式と関数呼び出し式の違い</a></li>
+<li><a href="#未評価オペランドの一覧">未評価オペランドの一覧</a><ul>
+<li><a href="#requires式">requires式</a></li>
+<li><a href="#typeid">typeid</a></li>
+<li><a href="#sizeof">sizeof</a></li>
+<li><a href="#noexcept演算子">noexcept演算子</a></li>
+<li><a href="#decltype">decltype</a></li>
+<li><a href="#requires-clause">requires-clause</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#no_unique_address-空のオブジェクトの言語サポート">[[no_unique_address]]: 空のオブジェクトの言語サポート</a></li>
+<li><a href="#range-based-forのカスタマイゼーションポイントの検索方法の変更">Range-based forのカスタマイゼーションポイントの検索方法の変更</a></li>
+<li><a href="#構造化束縛をアクセス可能なメンバーにも適用">構造化束縛をアクセス可能なメンバーにも適用</a></li>
+<li><a href="#構造化束縛のカスタマイゼーションポイントを名前検索するルールの緩和">構造化束縛のカスタマイゼーションポイントを名前検索するルールの緩和</a><ul>
+<li><a href="#c17の構造化束縛のおさらい">C++17の構造化束縛のおさらい</a></li>
+<li><a href="#c20による変更">C++20による変更</a></li>
+</ul></li>
+<li><a href="#文脈上型であることが明らかな場所での型としての依存名にtypename不要の制限緩和">文脈上型であることが明らかな場所での型としての依存名にtypename不要の制限緩和</a><ul>
+<li><a href="#依存名">依存名</a></li>
+<li><a href="#typenameを明示的に書かなくてもよい文脈">typenameを明示的に書かなくてもよい文脈</a><ul>
+<li><a href="#new">new</a></li>
+<li><a href="#エイリアス宣言">エイリアス宣言</a></li>
+<li><a href="#戻り値の型の後置">戻り値の型の後置</a></li>
+<li><a href="#テンプレート型仮引数のデフォルト実引数">テンプレート型仮引数のデフォルト実引数</a></li>
+<li><a href="#static_castconst_castreinterpret_castdynamic_cast">static_cast/const_cast/reinterpret_cast/dynamic_cast</a></li>
+<li><a href="#名前空間スコープにおける単純宣言と関数定義">名前空間スコープにおける単純宣言と関数定義</a></li>
+<li><a href="#メンバー宣言">メンバー宣言</a></li>
+<li><a href="#メンバー宣言の中の仮引数宣言">メンバー宣言の中の仮引数宣言</a></li>
+<li><a href="#関数名が修飾名の関数宣言の仮引数宣言">関数名が修飾名の関数宣言の仮引数宣言</a></li>
+<li><a href="#ラムダ式の仮引数宣言">ラムダ式の仮引数宣言</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#ラムダキャプチャーの中のパック展開">ラムダキャプチャーの中のパック展開</a><ul>
+<li><a href="#単純キャプチャー">単純キャプチャー</a></li>
+<li><a href="#初期化キャプチャー">初期化キャプチャー</a></li>
+</ul></li>
+<li><a href="#likelyとunlikely">[[likely]]と[[unlikely]]</a></li>
+<li><a href="#非型テンプレート仮引数の制限緩和">非型テンプレート仮引数の制限緩和</a><ul>
+<li><a href="#非型テンプレート仮引数の型">非型テンプレート仮引数の型</a><ul>
+<li><a href="#構造型structural-type">構造型(structural type)</a></li>
+<li><a href="#スカラー型">スカラー型</a></li>
+<li><a href="#lvalueリファレンス型">lvalueリファレンス型</a></li>
+<li><a href="#条件付きリテラルクラス型">条件付きリテラルクラス型</a></li>
+</ul></li>
+<li><a href="#テンプレート実引数同一">テンプレート実引数同一</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
 <h1 id="序">序</h1>
 <p>C++20の新機能を解説する。</p>
 <h1 id="c20の概要">C++20の概要</h1>
-<p>C++20は2020年に制定されたは国際標準規格だ。C++は厳格に3年おきに規格を制定するスケジュールを敷いている。そのため、C++20の前の規格は2017年に制定されたC++17で、次の規格はおそらく2023年に制定されるC++23になるだろう。</p>
-<p>近年C++が厳格に3年おきに規格を制定するようになったのは、過去の二度の失敗から学んだためだ。C++での最初の規格、C++98は1998年に制定されたが、この規格は本来、1990年台の前半までに制定できなければ失敗だと言われていた。C++11は2011年に制定されたが、この規格は本来200x年までに制定される予定であったので、C++0xと呼ばれていた。</p>
-<p>なぜかつてのC++の規格が本来の予定を大幅に超過して制定されたかというと、スケジュール管理の目標に問題があったためだ。スケジュール管理をする場合の目標設定として以下の2つが考えられる。</p>
+<p>C++20は2020年に制定された国際標準規格だ。C++は厳格に3年おきに規格を制定するスケジュールを敷いている。そのため、C++20の前の規格は2017年に制定されたC++17で、次の規格はおそらく2023年に制定されるC++23になるだろう。</p>
+<p>近年C++が厳格に3年おきに規格を制定するようになったのは、過去の二度の失敗から学んだためだ。C++での最初の規格、C++98は1998年に制定されたが、この規格は本来、1990年台の前半までに制定できなければ失敗だと言われていた。1998年の制定すでに大失敗だったのだ。C++11は2011年に制定されたが、この規格は本来200x年までに制定される予定であったので、C++0xと呼ばれていた。結果は2009年にすら間に合わなかった。</p>
+<p>なぜかつてのC++の規格が本来の予定より大幅に遅延して制定されたかというと、スケジュール管理の目標に問題があったためだ。スケジュール管理をする場合の目標設定として以下の2つが考えられる。</p>
 <ul>
 <li>機能に対する目標</li>
 <li>期間に対する目標</li>
 </ul>
 <p>機能を目標として設定すると、ある機能Xが完成するまでリリースができなくなる。そのため、リリース時期は機能Xが完成するまで際限なく引き伸ばされる。</p>
 <p>期間を目標にするとどうか。期間を区切って、何日後や何ヶ月後のこの日に必ずリリースすると宣言する。その場合、納期に間に合わなかった機能は含まれなくなる。</p>
-<p>スケジュール管理の目標は機能か期限のどちらかしか選ぶことはできず、一方を選ぶと他方は諦めなければならない。C++ではC++98とC++11で機能を目標としたスケジュール管理をしてきた。そのため、C++に入れる予定の機能が完成するまで際限なく規格制定が延期されることになった。正式に制定されていない規格は、将来変わる可能性があるので、C++コンパイラーは積極的に機能を実装しようとはせず、機能が実装されないので実装経験や利用経験も積まれず、もうそろそろ完成という段階になって新たに不具合が見つかり完成が遠のくという負のスパイラルに陥っていた。</p>
-<p>そのため、C++14からはC++標準化委員会は厳格に3年おきに標準規格を制定するというスケジュール管理戦略を取った。ある機能が今回の3年の期限に間に合わなかったならば、次の3年に回される。「でもあと一回会議をはさめば合意が取れるから」と言い訳をして実際にそのとおりになったためしはない。間に合わなければ問答無用で次回以降に持ち越しだ。</p>
-<p>C++20ではこのようにして次回に持ち越された成熟を重ねてきた機能が多く採用されることになった。特に大きな機能だけでも、</p>
+<p>スケジュール管理の目標は機能か期限のどちらかしか選ぶことはできず、一方を選ぶと他方は諦めなければならない。C++ではC++98とC++11で機能を目標としたスケジュール管理をしてきた。そのため、C++に入れる予定の機能が完成するまで際限なく規格制定が延期されることになった。正式に制定されていない規格は、将来変わる可能性があるので、C++コンパイラーベンダーは積極的に機能を実装しようとはせず、機能が実装されないので実装経験や利用経験も積まれず、もうそろそろ完成という段階になって新たに不具合が見つかり完成が遠のくという負のスパイラルに陥っていた。</p>
+<p>そのため、C++14からはC++標準化委員会は厳格に3年おきに標準規格を制定するというスケジュール管理戦略を取った。ある機能が今回の3年の期限に間に合わなかったならば、次の3年に回される。「でもあと一回会議をはさめば合意が取れるから」と言い訳をして実際にそのとおりになったためしはない。間に合わなければ問答無用で次回以降に持ち越す。</p>
+<p>現在は多くの自由ソフトウェアプロジェクトが納期に対する目標を設定したスケジュール管理を行っている。gitのようなDVCS（分散バージョン管理システム）が普及したのもこの流行を後押ししている。読者も度々更新されるソフトウェアの開発に携わる場合は納期を目標を設定すべきだ。ただし、納期に間に合わない機能は絶対にマージしない鉄の意志が必要となる。</p>
+<p>C++20ではこのようにして何度も次回に持ち越され、成熟を重ねてきた新機能が多く採用されることになった。特に大きな機能だけでも、</p>
 <ul>
 <li>コンセプト</li>
 <li>コルーチン</li>
 <li>モジュール</li>
 </ul>
-<p>があるし、ライブラリとしても</p>
+<p>があるし、大きな新ライブラリとしても</p>
 <ul>
-<li>レンジ</li>
+<li>Range</li>
+<li>span</li>
+<li>ビット列操作</li>
+<li>std::source_location</li>
 <li>std::format</li>
 </ul>
 <p>がある。また、今回はconstexprの制限がさらに大幅に緩和された。この制限緩和は将来のさらなる機能追加のための布石だ。C++はまだまだ進化を続ける言語だ。</p>
-<p>本書はC++17の知識を持っている読者を対象にC++20に追加された新機能を解説する。まだC++17までの知識を得ていない読者は、拙書「C++11/14コア言語」や「江添亮の詳説C++17」などで学ぶとよい。</p>
+<p>本書はC++17の知識を持っている読者を対象にC++20に追加された新機能を解説する。まだC++17までの知識を得ていない読者は、拙書「C++11/14コア言語」や「江添亮の詳説C++17」で学ぶとよい。また、C++の基礎的な知識が不足している読者は、「江添亮のC++入門」で学ぶとよい。</p>
 <h1 id="コア言語の変更点">コア言語の変更点</h1>
 <p>この章ではC++20でコア言語に対して行われた変更を説明していく。特に大きな新機能や、ライブラリと合わせて解説する必要があるコア言語機能は、別に章を分けて説明する。</p>
 <h2 id="ビットフィールドに対するデフォルトメンバー初期化子">ビットフィールドに対するデフォルトメンバー初期化子</h2>
@@ -304,7 +357,7 @@ F( 0 ) </code></pre>
 <a class="sourceLine" id="cb17-5" title="5">S s{ .x = <span class="dv">0</span>, <span class="dv">1</span> } ;</a></code></pre></div>
 <p>このような制限がある理由としては、C++ではオブジェクトの破棄は構築の逆順に行われ、初期化リストの要素の評価は表記順に行われるために、指示初期化子でも宣言順に記述しなければならない制限が加えられた。配列の指示初期化子はラムダ式と文法が衝突するために採用されなかった。指示初期化子のネストはC99でもまれにしか使われていないので採用されなかった。</p>
 <h2 id="ラムダ式に馴染み深いテンプレート文法の追加">ラムダ式に馴染み深いテンプレート文法の追加</h2>
-<p>C++20ではラムダ式に従来のテンプレートの文法によく似た馴染み深いテンプレートパラメーターの記述ができるようになった。</p>
+<p>C++20ではラムダ式に従来のテンプレートの文法によく似た馴染み深いテンプレート仮引数の記述ができるようになった。</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb18-1" title="1">[]&lt;<span class="kw">typename</span> T&gt;( T x ) { <span class="cf">return</span> x ; } ;</a></code></pre></div>
 <p>このラムダ式と同等のものを関数テンプレート風に書くと以下のようになる。</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
@@ -560,5 +613,1253 @@ F( 0 ) </code></pre>
 <a class="sourceLine" id="cb51-8" title="8"></a>
 <a class="sourceLine" id="cb51-9" title="9"><span class="kw">template</span> &lt; <span class="kw">typename</span> U &gt;</a>
 <a class="sourceLine" id="cb51-10" title="10"><span class="kw">struct</span> trait&lt; <span class="va">class_</span>::impl&lt;U&gt; &gt; ;</a></code></pre></div>
+<h2 id="デフォルト構築可能かつ代入可能なステートレスラムダ">デフォルト構築可能かつ代入可能なステートレスラムダ</h2>
+<p>ステートレスラムダとは、キャプチャーをしないラムダ式のことだ。</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb52-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb52-2" title="2">{</a>
+<a class="sourceLine" id="cb52-3" title="3">    <span class="dt">int</span> x { } ;</a>
+<a class="sourceLine" id="cb52-4" title="4">    <span class="co">// キャプチャーをするラムダ</span></a>
+<a class="sourceLine" id="cb52-5" title="5">    [=]{ <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb52-6" title="6">    [&amp;]{ <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb52-7" title="7">    [x]{ <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb52-8" title="8">    [&amp;x]{ <span class="cf">return</span> x ; ] ;</a>
+<a class="sourceLine" id="cb52-9" title="9">    [ y = x ]{ <span class="cf">return</span> y ; } ;</a>
+<a class="sourceLine" id="cb52-10" title="10"></a>
+<a class="sourceLine" id="cb52-11" title="11">    <span class="co">// キャプチャーをしないラムダ</span></a>
+<a class="sourceLine" id="cb52-12" title="12">    []{ <span class="cf">return</span> <span class="dv">0</span>; }</a>
+<a class="sourceLine" id="cb52-13" title="13">}</a></code></pre></div>
+<p>キャプチャーをしないラムダ式を評価した結果のクロージャーオブジェクトは特別に関数へのポインターへの変換関数を持っている。</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb53-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb53-2" title="2">{</a>
+<a class="sourceLine" id="cb53-3" title="3">    <span class="co">// ラムダ式</span></a>
+<a class="sourceLine" id="cb53-4" title="4">    <span class="kw">auto</span> x = [](<span class="dt">int</span> x) -&gt; <span class="dt">int</span> { <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb53-5" title="5">    <span class="co">// 関数へのポインターへの変換関数</span></a>
+<a class="sourceLine" id="cb53-6" title="6">    <span class="kw">auto</span> (*p)(<span class="dt">int</span>) -&gt; <span class="dt">int</span> = x ;</a>
+<a class="sourceLine" id="cb53-7" title="7">    <span class="co">// 関数へのポインターを経由した関節呼び出し</span></a>
+<a class="sourceLine" id="cb53-8" title="8">    p(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb53-9" title="9">}</a></code></pre></div>
+<p>C++17までは、ラムダ式を評価した結果のクロージャーオブジェクトはデフォルト構築可能ではなく、代入可能でもなかった。</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb54-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb54-2" title="2">{</a>
+<a class="sourceLine" id="cb54-3" title="3">    <span class="kw">auto</span> f = []{} ;</a>
+<a class="sourceLine" id="cb54-4" title="4">    <span class="co">// エラー、デフォルト構築できない</span></a>
+<a class="sourceLine" id="cb54-5" title="5">    <span class="kw">decltype</span>(f) g ;</a>
+<a class="sourceLine" id="cb54-6" title="6">    <span class="co">// エラー、代入できない</span></a>
+<a class="sourceLine" id="cb54-7" title="7">    g = f ;</a>
+<a class="sourceLine" id="cb54-8" title="8">}</a></code></pre></div>
+<p>テンプレートを使ったジェネリックなコードでは、型が普通に振る舞うこと、つまりデフォルト構築可能であることや、代入可能であることはとても重要だ。そこでC++20ではステートレスラムダを評価した結果のクロージャーオブジェクトはデフォルト構築可能かつコピー代入可能かつムーブ代入可能になった。</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb55-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb55-2" title="2">{</a>
+<a class="sourceLine" id="cb55-3" title="3">    <span class="kw">auto</span> f = []{} ;</a>
+<a class="sourceLine" id="cb55-4" title="4">    <span class="co">// OK、デフォルト構築可能</span></a>
+<a class="sourceLine" id="cb55-5" title="5">    <span class="kw">decltype</span>(f) g ;</a>
+<a class="sourceLine" id="cb55-6" title="6">    <span class="co">// OK、コピー代入可能</span></a>
+<a class="sourceLine" id="cb55-7" title="7">    g = f ;</a>
+<a class="sourceLine" id="cb55-8" title="8">    <span class="co">// OK、ムーブ代入可能</span></a>
+<a class="sourceLine" id="cb55-9" title="9">    g = <span class="bu">std::</span>move(f) ;</a>
+<a class="sourceLine" id="cb55-10" title="10">}</a></code></pre></div>
+<p>ステートレスラムダではないキャプチャーをするラムダ式のクロージャーオブジェクトは今までどおりデフォルト構築可能ではないし代入可能でもない。</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb56-1" title="1"><span class="dt">int</span> main ()</a>
+<a class="sourceLine" id="cb56-2" title="2">{</a>
+<a class="sourceLine" id="cb56-3" title="3">    <span class="dt">int</span> x { } ;</a>
+<a class="sourceLine" id="cb56-4" title="4">    <span class="co">// キャプチャーするラムダ式</span></a>
+<a class="sourceLine" id="cb56-5" title="5">    <span class="kw">auto</span> f = [=]{ <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb56-6" title="6">    <span class="co">// 違法、デフォルト構築不可</span></a>
+<a class="sourceLine" id="cb56-7" title="7">    <span class="kw">decltype</span>(f) g ;</a>
+<a class="sourceLine" id="cb56-8" title="8">    <span class="co">// 違法、代入不可</span></a>
+<a class="sourceLine" id="cb56-9" title="9">    g = f ;</a>
+<a class="sourceLine" id="cb56-10" title="10">}</a></code></pre></div>
+<p>この機能は次に説明する機能と合わせて使うことで真価を発揮する。</p>
+<h2 id="未評価文脈におけるラムダ式">未評価文脈におけるラムダ式</h2>
+<p>C++20では未評価文脈におけるラムダ式が許容される制限緩和が行われた。</p>
+<p>以下のようなコードがC++17では違法だったが、C++20では合法になる。</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb57-1" title="1"><span class="bu">std::</span>size_t closure_object_size = <span class="kw">sizeof</span>([]{}) ;</a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="kw">using</span> <span class="dt">closure_object_type</span> = decltye([]{}) ;</a></code></pre></div>
+<p>この変更はとても重要で、平均的なC++プログラマーも直接恩恵を受けるのだが、前提となる知識が多い。</p>
+<p>まず大前提の知識として、ラムダ式によって生成されるクロージャーオブジェクトは、たとえラムダ式が同じトークン列であったとしても、別の型になる仕様がある。</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb58-1" title="1"><span class="kw">auto</span> a = []{} ;</a>
+<a class="sourceLine" id="cb58-2" title="2"><span class="kw">auto</span> b = []{} ;</a>
+<a class="sourceLine" id="cb58-3" title="3"></a>
+<a class="sourceLine" id="cb58-4" title="4"><span class="co">// false</span></a>
+<a class="sourceLine" id="cb58-5" title="5"><span class="dt">bool</span> c = <span class="bu">std::</span>is_same_v&lt; <span class="kw">decltype</span>(a), <span class="kw">decltype</span>(b) &gt; ;</a></code></pre></div>
+<p><code>a, b</code>は全く同じトークン列のラムダ式から生成されたクロージャーオブジェクトだが、それぞれ別の型を持つ。したがって最後の<code>is_same</code>は<code>false</code>になる。</p>
+<h3 id="未評価文脈">未評価文脈</h3>
+<p>未評価オペランド(unevaluated operand)の中の式は評価されない。未評価文脈とは未評価オペランドの中の式という意味だ。未評価オペランドは式を書くことが目的で評価することが目的ではない。</p>
+<p>未評価オペランドとして最も昔からあるものがsizeofのオペランドだ。sizeofのオペランドは評価されない。</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb59-1" title="1"><span class="co">// 副作用を伴う関数</span></a>
+<a class="sourceLine" id="cb59-2" title="2"><span class="dt">int</span> g{} ;</a>
+<a class="sourceLine" id="cb59-3" title="3"><span class="dt">int</span> f()</a>
+<a class="sourceLine" id="cb59-4" title="4">{</a>
+<a class="sourceLine" id="cb59-5" title="5">    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;hello&quot;</span><span class="bu">sv</span> ;</a>
+<a class="sourceLine" id="cb59-6" title="6">    ++g ;</a>
+<a class="sourceLine" id="cb59-7" title="7">    <span class="cf">return</span> g ;</a>
+<a class="sourceLine" id="cb59-8" title="8">}</a>
+<a class="sourceLine" id="cb59-9" title="9"></a>
+<a class="sourceLine" id="cb59-10" title="10"><span class="dt">int</span> main ()</a>
+<a class="sourceLine" id="cb59-11" title="11">{</a>
+<a class="sourceLine" id="cb59-12" title="12">    <span class="co">// 未評価オペランド</span></a>
+<a class="sourceLine" id="cb59-13" title="13">    <span class="bu">std::</span>cout &lt;&lt; <span class="kw">sizeof</span>( f() ) ;</a>
+<a class="sourceLine" id="cb59-14" title="14">}</a></code></pre></div>
+<p>この例では、未評価オペランドに<code>f()</code>という式がある。これは関数fを関数呼び出しする式だ。関数fは標準出力とグローバル名前空間スコープの変数gをインクリメントするが、その内容は評価されない。sizeofは未評価オペランドに記述された式を評価した結果の型のサイズを返す式で、式は評価しない。</p>
+<p>sizeofは式を評価しないので、この場合、関数fは定義されている必要すらない。</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb60-1" title="1"><span class="dt">int</span> f() ;</a>
+<a class="sourceLine" id="cb60-2" title="2"></a>
+<a class="sourceLine" id="cb60-3" title="3"><span class="co">// OK</span></a>
+<a class="sourceLine" id="cb60-4" title="4"><span class="co">// sizeof(int)と同じ</span></a>
+<a class="sourceLine" id="cb60-5" title="5"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>( f() ) ;</a></code></pre></div>
+<p>定義されていない関数を呼び出すことはできないが、sizeofは未評価オペランドなので、関数は定義されている必要がない。</p>
+<h3 id="ラムダ式と関数呼び出し式の違い">ラムダ式と関数呼び出し式の違い</h3>
+<p>ラムダ式はクロージャーオブジェクトを生成するための式だ。ラムダ式を評価した結果のクロージャーオブジェクトはそのまま関数呼び出し式が適用できる。</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb61-1" title="1"><span class="co">// ラムダ式</span></a>
+<a class="sourceLine" id="cb61-2" title="2"><span class="co">// 評価した結果の型はユニークなクロージャーオブジェクトの型</span></a>
+<a class="sourceLine" id="cb61-3" title="3">[]{} ;</a>
+<a class="sourceLine" id="cb61-4" title="4"><span class="co">// ラムダ式の結果に関数呼び出し式を適用</span></a>
+<a class="sourceLine" id="cb61-5" title="5"><span class="co">// 最後の()が関数呼び出し式</span></a>
+<a class="sourceLine" id="cb61-6" title="6"><span class="co">// 評価した結果の型はvoid</span></a>
+<a class="sourceLine" id="cb61-7" title="7">[]{}() ;</a></code></pre></div>
+<p>この違いを認識する必要がある。未評価オペランドに、ラムダ式のみを書くのと、ラムダ式と関数呼び出し式を書くのは異なる。</p>
+<p>上記のコードの文法が理解できない場合は、以下のコードを参考にするとよい。同じ文法だ。</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb62-1" title="1"><span class="co">// 関数</span></a>
+<a class="sourceLine" id="cb62-2" title="2"><span class="dt">void</span> f( <span class="dt">int</span> x, <span class="dt">int</span> y ) ;</a>
+<a class="sourceLine" id="cb62-3" title="3"><span class="co">// 関数名に対する関数呼び出し式の適用</span></a>
+<a class="sourceLine" id="cb62-4" title="4">f ( <span class="dv">1</span>, <span class="dv">2</span> ) ;</a>
+<a class="sourceLine" id="cb62-5" title="5"><span class="co">// ラムダ式</span></a>
+<a class="sourceLine" id="cb62-6" title="6">[]( <span class="dt">int</span> x, <span class="dt">int</span> y ) {} ;</a>
+<a class="sourceLine" id="cb62-7" title="7"><span class="co">// ラムダ式によって生成されたクロージャーオブジェクト</span></a>
+<a class="sourceLine" id="cb62-8" title="8"><span class="co">// に対する関数呼び出し式の適用</span></a>
+<a class="sourceLine" id="cb62-9" title="9">[]( <span class="dt">int</span> x, <span class="dt">int</span> y ) {} ( <span class="dv">1</span>, <span class="dv">2</span> ) ;</a></code></pre></div>
+<h3 id="未評価オペランドの一覧">未評価オペランドの一覧</h3>
+<p>C++20において未評価オペランドを持つ文脈は6箇所ある。</p>
+<ul>
+<li>requires式</li>
+<li>typeid</li>
+<li>sizeof</li>
+<li>noexcept演算子</li>
+<li>decltype</li>
+<li>requires-clause</li>
+</ul>
+<p>それぞれについてラムダ式を書いた場合を見ていく。</p>
+<h4 id="requires式">requires式</h4>
+<p>requires式の中に書かれた式は未評価オペランドだ。requires式は式を書くのが目的であって、評価するのが目的ではないからだ。</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb63-1" title="1"><span class="kw">constexpr</span> <span class="dt">bool</span> b = <span class="kw">requires</span> { []{} ; } ;</a></code></pre></div>
+<p>requires式の中の未評価オペランドにラムダ式を書くことはできる。ただし、ラムダ式の中にsubstitution failureを引き起こす依存名を書くと、ハードエラーになる。SFINAE(Substitution Failure Is Not An Error)にはならない。SFIAE(Substituion Failure Is An Error)だ。</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb64-1" title="1"><span class="co">// 制約テンプレート</span></a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb64-3" title="3">    <span class="kw">requires</span> <span class="kw">requires</span></a>
+<a class="sourceLine" id="cb64-4" title="4">    {</a>
+<a class="sourceLine" id="cb64-5" title="5">        []{ T::value ; } ;</a>
+<a class="sourceLine" id="cb64-6" title="6">    }</a>
+<a class="sourceLine" id="cb64-7" title="7"><span class="dt">void</span> f() { }</a>
+<a class="sourceLine" id="cb64-8" title="8"></a>
+<a class="sourceLine" id="cb64-9" title="9"><span class="co">// 非制約テンプレート</span></a>
+<a class="sourceLine" id="cb64-10" title="10"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb64-11" title="11"><span class="dt">void</span> f() { }</a>
+<a class="sourceLine" id="cb64-12" title="12"></a>
+<a class="sourceLine" id="cb64-13" title="13"><span class="kw">struct</span> S { <span class="kw">inline</span> <span class="at">static</span> <span class="dt">int</span> value = <span class="dv">0</span> ; } ;</a>
+<a class="sourceLine" id="cb64-14" title="14"></a>
+<a class="sourceLine" id="cb64-15" title="15"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb64-16" title="16">{</a>
+<a class="sourceLine" id="cb64-17" title="17">    <span class="co">// エラー、SFINAEではない</span></a>
+<a class="sourceLine" id="cb64-18" title="18">    f&lt;<span class="dt">int</span>&gt;() ;</a>
+<a class="sourceLine" id="cb64-19" title="19">    <span class="co">// OK、制約テンプレートが選ばれる</span></a>
+<a class="sourceLine" id="cb64-20" title="20">    f&lt;S&gt;() ;</a>
+<a class="sourceLine" id="cb64-21" title="21">}</a></code></pre></div>
+<p>上記の制約テンプレートが以下のようになっていた場合、</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb65-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb65-2" title="2">    <span class="kw">requires</span> <span class="kw">requires</span> { T::value ; }</a>
+<a class="sourceLine" id="cb65-3" title="3"><span class="dt">void</span> f() { }</a></code></pre></div>
+<p>エラーは起こらない。テンプレートの実体化とオーバーロード解決の結果、<code>f&lt;int&gt;</code>はSubstitution Failureだが、SFINAEによりエラーにはならない。そして制約を満たさないため非制約テンプレートが選ばれる。<code>f&lt;S&gt;</code>はSubbstitution Failureもなく制約を満たすため制約テンプレートが選ばれる</p>
+<h4 id="typeid">typeid</h4>
+<p>typeidのオペランドの型がポリモーフィック型ではない場合、未評価オペランドになる。</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb66-1" title="1"><span class="co">// クロージャーオブジェクトの型</span></a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="kw">typeid</span>( []{} ) ;</a>
+<a class="sourceLine" id="cb66-3" title="3"><span class="co">// void</span></a>
+<a class="sourceLine" id="cb66-4" title="4"><span class="co">// クロージャーオブジェクトの呼び出し</span></a>
+<a class="sourceLine" id="cb66-5" title="5"><span class="co">// この場合の戻り値の型はvoid</span></a>
+<a class="sourceLine" id="cb66-6" title="6"><span class="kw">typeid</span>( []{}() ) ;</a></code></pre></div>
+<p>クロージャーオブジェクトがポリモーフィック型になることはないので、typeidの中にラムダ式だけを書いた場合は必ず未評価オペランドになる。</p>
+<p>ただし、クロージャーオブジェクトの型はそれぞれ異なるので、同じトークン列のラムダ式を未評価オペランドの中に書いた2つのtypeidの返す<code>type_info</code>は等しくない。</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb67-1" title="1"><span class="kw">decltype</span>(<span class="kw">auto</span>) a = <span class="kw">typeid</span>([]{}) ;</a>
+<a class="sourceLine" id="cb67-2" title="2"><span class="kw">decltype</span>(<span class="kw">auto</span>) b = <span class="kw">typeid</span>([]{}) ;</a>
+<a class="sourceLine" id="cb67-3" title="3"><span class="co">// false</span></a>
+<a class="sourceLine" id="cb67-4" title="4"><span class="dt">bool</span> b = a == b ;</a></code></pre></div>
+<p>もちろん、ひとたび生成された特定のクロージャーオブジェクトの型が変わることはない。</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb68-1" title="1"><span class="kw">auto</span> lambda = []{} ;</a>
+<a class="sourceLine" id="cb68-2" title="2"><span class="kw">decltype</span>(<span class="kw">auto</span>) a = <span class="kw">typeid</span>(lambda) ;</a>
+<a class="sourceLine" id="cb68-3" title="3"><span class="kw">decltype</span>(<span class="kw">auto</span>) b = <span class="kw">typeid</span>(lambda) ;</a>
+<a class="sourceLine" id="cb68-4" title="4"><span class="co">// true</span></a>
+<a class="sourceLine" id="cb68-5" title="5"><span class="dt">bool</span> b = a == b ;</a></code></pre></div>
+<h4 id="sizeof">sizeof</h4>
+<p>sizeofのオペランドは未評価オペランドだ。sizeofのオペランドにラムダ式を書いた場合、クロージャーオブジェクトのサイズを返す。</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb69-1" title="1"><span class="bu">std::</span>size_t closure_object_size = <span class="kw">sizeof</span>( []{} ) ;</a></code></pre></div>
+<p>これは以下のようなコードと似たような効果がある。</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb70-1" title="1"><span class="co">// ラムダ式が生成するクロージャーオブジェクトの模倣</span></a>
+<a class="sourceLine" id="cb70-2" title="2"><span class="kw">struct</span> closure_object</a>
+<a class="sourceLine" id="cb70-3" title="3">{</a>
+<a class="sourceLine" id="cb70-4" title="4">    <span class="dt">void</span> <span class="kw">operator</span>()() <span class="at">const</span> {} ;</a>
+<a class="sourceLine" id="cb70-5" title="5">} ;</a>
+<a class="sourceLine" id="cb70-6" title="6"></a>
+<a class="sourceLine" id="cb70-7" title="7"><span class="bu">std::</span>size_t closure_object_size = <span class="kw">sizeof</span>( closure_object{} ) ;</a></code></pre></div>
+<p>ラムダ式を関数呼び出しした場合は、式を評価した結果の型のsizeof、つまり戻り値の型になる。</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb71-1" title="1"><span class="co">// エラー、sizeof(void)</span></a>
+<a class="sourceLine" id="cb71-2" title="2"><span class="kw">sizeof</span>( []{}() ) ;</a>
+<a class="sourceLine" id="cb71-3" title="3"><span class="co">// sizeof(int)と同じ</span></a>
+<a class="sourceLine" id="cb71-4" title="4"><span class="kw">sizeof</span>( []{ <span class="cf">return</span> <span class="dv">0</span> ;}() ) ;</a>
+<a class="sourceLine" id="cb71-5" title="5"><span class="co">// sizeof(double)と同じ</span></a>
+<a class="sourceLine" id="cb71-6" title="6"><span class="kw">sizeof</span>( []{ <span class="cf">return</span> <span class="fl">0.0</span> ; }() ) ;</a></code></pre></div>
+<p>これは以下のようなコードと同じだ。</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb72-1" title="1"><span class="dt">void</span> f1() ;</a>
+<a class="sourceLine" id="cb72-2" title="2"><span class="dt">int</span> f2() ;</a>
+<a class="sourceLine" id="cb72-3" title="3"><span class="dt">double</span> f3() ;</a>
+<a class="sourceLine" id="cb72-4" title="4"><span class="co">// エラー、sizeof(void)</span></a>
+<a class="sourceLine" id="cb72-5" title="5"><span class="kw">sizeof</span>( f1() ) ;</a>
+<a class="sourceLine" id="cb72-6" title="6"><span class="co">// sizeof(int)と同じ</span></a>
+<a class="sourceLine" id="cb72-7" title="7"><span class="kw">sizeof</span>( f2() ) ;</a>
+<a class="sourceLine" id="cb72-8" title="8"><span class="co">// sizeof(double)と同じ</span></a>
+<a class="sourceLine" id="cb72-9" title="9"><span class="kw">sizeof</span>( f3() ) ;</a></code></pre></div>
+<p>ラムダ式の生成するクロージャーオブジェクトのサイズは実装に依存する。</p>
+<p>例えば筆者の環境では、ステートレスラムダのサイズは1になる。</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb73-1" title="1"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>( []{} ) ;</a></code></pre></div>
+<p>キャプチャーを行うラムダ式の場合、クロージャーオブジェクトがキャプチャーする変数のオブジェクトのサイズとアライメント調整の結果のサイズになる。</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb74-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb74-2" title="2">{</a>
+<a class="sourceLine" id="cb74-3" title="3">    <span class="dt">int</span> i{} ;</a>
+<a class="sourceLine" id="cb74-4" title="4">    <span class="kw">auto</span> size = <span class="kw">sizeof</span>( [=]{ i ; } ) ;</a>
+<a class="sourceLine" id="cb74-5" title="5">}</a></code></pre></div>
+<p>筆者の環境では変数<code>size</code>は4になる。これは、筆者の環境の<code>sizeof(int)</code>は4であることと、int型をコピーして持つよう生成されたクロージャーオブジェクトのサイズが4だということだ。</p>
+<p>これがリファレンスキャプチャーの場合、</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb75-1" title="1"><span class="kw">auto</span> size = <span class="kw">sizeof</span>( [&amp;]{ i ; } ) ;</a></code></pre></div>
+<p>筆者の環境では<code>size</code>は8になる。筆者の環境ではアドレス長が8バイトあるからだ。</p>
+<p>複数の変数をキャプチャーする場合、アライメント調整も考慮しなければならない。</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb76-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb76-2" title="2">{</a>
+<a class="sourceLine" id="cb76-3" title="3">    <span class="dt">char</span> c{} ;</a>
+<a class="sourceLine" id="cb76-4" title="4">    <span class="dt">int</span> i{} ;</a>
+<a class="sourceLine" id="cb76-5" title="5">    <span class="kw">auto</span> ci_size = <span class="kw">sizeof</span>(c) + <span class="kw">sizeof</span>(i) ;</a>
+<a class="sourceLine" id="cb76-6" title="6">    <span class="kw">auto</span> lambda_size = <span class="kw">sizeof</span>( [=]{ c; i ; } ) ;</a>
+<a class="sourceLine" id="cb76-7" title="7">}</a></code></pre></div>
+<p>筆者の環境では、<code>ci_size</code>は5になるが、<code>lambda_size</code>は8になる。</p>
+<p>これらのことはラムダ式に限った話ではなく、クラスのサイズにも共通の話だ。</p>
+<h4 id="noexcept演算子">noexcept演算子</h4>
+<p>noexcept演算子のオペランドは未評価式だ。</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb77-1" title="1"><span class="dt">bool</span> b = <span class="kw">noexcept</span>( []{} ) ;</a></code></pre></div>
+<p>C++11で追加されたnoexcept演算子は、オペランドの式がpotentially-throwing(潜在的に例外を投げる)かどうかを調べる。オペランドの式がpotentially-throwingならばtrue、そうでない場合はfalseを返す。</p>
+<p>「潜在的に例外を投げる」とは実際に例外を投げるコードパスがあるという意味ではない。C++の規格は簡易的な「潜在的に例外を投げる」という条件を規定している。</p>
+<p>潜在的に例外を投げる式であるかどうかは、大まかに以下のようにまとめられる。</p>
+<p>例外指定が<code>noexcept</code>, <code>noexcept(true)</code>以外の関数は潜在的に例外を投げる例外指定を持つ。</p>
+<p>~~~~cpp // 潜在的に例外を投げる例外指定 void a() ; void b() noexcept(false) ;</p>
+<p>// 潜在的に例外を投げる例外指定ではない void c() noexcept ; void d() noexcept(false) ; ~~~</p>
+<p>これを踏まえた上で、ある式が「潜在的に例外を投げる」というのは、以下の条件のいずれかを満たした場合だ</p>
+<ul>
+<li>式は関数を呼び出し、その関数が潜在的に例外を投げる例外指定である</li>
+<li>式は暗黙に呼び出す関数が潜在的に例外を投げる</li>
+<li>式はthrow式</li>
+<li>式はdynamic_castで、リファレンスキャストであり、実行時チェックを必要とする</li>
+<li>式はtypeidでポリモーフィックなクラス型へのポインターに単項*演算子を適用した</li>
+<li>式は上記の式をサブ式に含む</li>
+</ul>
+<p>クラスの暗黙に生成されるコンストラクターは、その初期化に潜在的に例外を投げる式が含まれる場合は潜在的に例外を投げる例外指定を持つ。</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb78-1" title="1"><span class="co">// 潜在的に例外を投げる例外指定ではないコンストラクター</span></a>
+<a class="sourceLine" id="cb78-2" title="2"><span class="kw">struct</span> X { } ;</a>
+<a class="sourceLine" id="cb78-3" title="3"></a>
+<a class="sourceLine" id="cb78-4" title="4"><span class="co">// 潜在的に例外を投げる例外指定のコンストラクター</span></a>
+<a class="sourceLine" id="cb78-5" title="5"><span class="co">// std::stringによる</span></a>
+<a class="sourceLine" id="cb78-6" title="6"><span class="kw">struct</span> Y</a>
+<a class="sourceLine" id="cb78-7" title="7">{</a>
+<a class="sourceLine" id="cb78-8" title="8">    <span class="bu">std::</span>string s ;</a>
+<a class="sourceLine" id="cb78-9" title="9">} ;</a></code></pre></div>
+<p>これらの前提知識を踏まえてnoexcept演算子のオペランドにラムダ式を書いた場合について考えていく。</p>
+<p>ラムダ式が何もキャプチャーをしないステートレスラムダの場合、<code>noexcept</code>は<code>true</code>になる。</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb79-1" title="1"><span class="dt">bool</span> b = <span class="kw">noexcept</span>([]{}) ;</a></code></pre></div>
+<p>ラムダ式の生成するクロージャーオブジェクトのコンストラクターは潜在的に例外を投げる例外指定を持たないからだ。</p>
+<p>ラムダ式がコピーキャプチャーをする場合、<code>noexcept</code>の結果はキャプチャーする変数のコピーコンストラクターの例外指定が影響する。</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb80-1" title="1"><span class="co">// コピーコンストラクターが</span></a>
+<a class="sourceLine" id="cb80-2" title="2"><span class="co">// 潜在的に例外を投げる例外指定を持たない型</span></a>
+<a class="sourceLine" id="cb80-3" title="3"><span class="kw">struct</span> no_throw { } ;</a>
+<a class="sourceLine" id="cb80-4" title="4"><span class="co">// コピーコンストラクターが</span></a>
+<a class="sourceLine" id="cb80-5" title="5"><span class="co">// 潜在的に例外を投げる例外指定を持つ型</span></a>
+<a class="sourceLine" id="cb80-6" title="6"><span class="kw">struct</span> ye<span class="va">s_throw</span></a>
+<a class="sourceLine" id="cb80-7" title="7">{</a>
+<a class="sourceLine" id="cb80-8" title="8">    yes_throw() = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb80-9" title="9">    yes_throw( <span class="at">const</span> yes_throw &amp; ) { }</a>
+<a class="sourceLine" id="cb80-10" title="10">} ;</a>
+<a class="sourceLine" id="cb80-11" title="11"></a>
+<a class="sourceLine" id="cb80-12" title="12"></a>
+<a class="sourceLine" id="cb80-13" title="13"><span class="dt">int</span> main ()</a>
+<a class="sourceLine" id="cb80-14" title="14">{</a>
+<a class="sourceLine" id="cb80-15" title="15">    no_throw no ;</a>
+<a class="sourceLine" id="cb80-16" title="16">    <span class="co">// true</span></a>
+<a class="sourceLine" id="cb80-17" title="17">    <span class="dt">bool</span> n = <span class="kw">noexcept</span>( [=]{ no ; } ) ;</a>
+<a class="sourceLine" id="cb80-18" title="18"></a>
+<a class="sourceLine" id="cb80-19" title="19">    yes_throw yes ;</a>
+<a class="sourceLine" id="cb80-20" title="20">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb80-21" title="21">    <span class="dt">bool</span> y = <span class="kw">noexcept</span>( [=]{ yes ; } ) ;</a>
+<a class="sourceLine" id="cb80-22" title="22">}</a></code></pre></div>
+<p>コピーキャプチャーをするラムダ式が生成するクロージャーオブジェクトはキャプチャーする変数のコピーコンストラクターを暗黙に呼び出す。そのコピーコンストラクターの例外指定が影響する。</p>
+<p>noexcept演算子のオペランドの中に書いたラムダ式に関数呼び出し式を適用すると、関数呼び出し式の結果になる。例外指定を書かない場合、潜在的に例外を投げる式となる。</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb81-1" title="1"><span class="co">// false</span></a>
+<a class="sourceLine" id="cb81-2" title="2"><span class="dt">bool</span> b = <span class="kw">noexcept</span>( []{}() ) ;</a></code></pre></div>
+<p>ラムダ式に例外指定を書くことで、潜在的に例外を投げる関数指定ではない関数にできる。</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb82-1" title="1"><span class="co">// true</span></a>
+<a class="sourceLine" id="cb82-2" title="2"><span class="dt">bool</span> b = <span class="kw">noexcept</span>( []() <span class="kw">noexcept</span> {}() ) ;</a></code></pre></div>
+<h4 id="decltype">decltype</h4>
+<p>プレイスホルダーのdecltypeのオペランドは未評価オペランドだ。型指定子decltypeはオペランドの式を評価した結果の型になる。</p>
+<p>decltypeのオペランドにラムダ式を書いた場合、ラムダ式が生成するクロージャーオブジェクトの型になる。</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb83-1" title="1"><span class="co">// クロージャーオブジェクトの型</span></a>
+<a class="sourceLine" id="cb83-2" title="2"><span class="kw">using</span> <span class="dt">closure_object_type</span> = <span class="kw">decltype</span>( []{} ) ;</a></code></pre></div>
+<p>ラムダ式はたとえ同じトークン列でも、それぞれユニークな型のクロージャーオブジェクトを生成する。そのため同じトークン列のラムダ式をオペランドに書いたdecltypeはそれぞれ別の型になる。</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb84-1" title="1"><span class="kw">using</span> a = <span class="kw">decltype</span>( []{} ) ;</a>
+<a class="sourceLine" id="cb84-2" title="2"><span class="kw">using</span> b = <span class="kw">decltype</span>( []{} ) ;</a>
+<a class="sourceLine" id="cb84-3" title="3"><span class="co">// false</span></a>
+<a class="sourceLine" id="cb84-4" title="4"><span class="dt">bool</span> b = <span class="bu">std::</span>is_same_v&lt;a, b&gt; ;</a></code></pre></div>
+<p>decltypeのオペランドの中でラムダ式を関数呼び出しした場合は、普通の関数を呼び出した場合と同じだ。</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb85-1" title="1"><span class="co">// void</span></a>
+<a class="sourceLine" id="cb85-2" title="2"><span class="kw">using</span> a = <span class="kw">decltype</span>( []{}() ) ;</a>
+<a class="sourceLine" id="cb85-3" title="3"><span class="co">// int</span></a>
+<a class="sourceLine" id="cb85-4" title="4"><span class="kw">using</span> b = <span class="kw">decltype</span>( []{ <span class="cf">return</span> <span class="dv">0</span> ; }() ) ;</a>
+<a class="sourceLine" id="cb85-5" title="5"><span class="co">// double</span></a>
+<a class="sourceLine" id="cb85-6" title="6"><span class="kw">using</span> c = <span class="kw">decltype</span>( []{ <span class="cf">return</span> <span class="fl">0.0</span> ; }() ) ;</a></code></pre></div>
+<p>これは以下のコードと同じだ。</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb86-1" title="1"><span class="kw">auto</span> l1(){ } </a>
+<a class="sourceLine" id="cb86-2" title="2"><span class="kw">auto</span> l2(){ <span class="cf">return</span> <span class="dv">0</span> ; }</a>
+<a class="sourceLine" id="cb86-3" title="3"><span class="kw">auto</span> l3(){ <span class="cf">return</span> <span class="fl">0.0</span> ; }</a>
+<a class="sourceLine" id="cb86-4" title="4"><span class="co">// void</span></a>
+<a class="sourceLine" id="cb86-5" title="5"><span class="kw">using</span> a = <span class="kw">decltype</span>( l1() ) ;</a>
+<a class="sourceLine" id="cb86-6" title="6"><span class="co">// int</span></a>
+<a class="sourceLine" id="cb86-7" title="7"><span class="kw">using</span> b = <span class="kw">decltype</span>( l2() ) ;</a>
+<a class="sourceLine" id="cb86-8" title="8"><span class="co">// double</span></a>
+<a class="sourceLine" id="cb86-9" title="9"><span class="kw">using</span> c = <span class="kw">decltype</span>( l3() ) ;</a></code></pre></div>
+<p>ラムダ式を未評価式の文脈で使えるようにする制限緩和で、最も実用的なのは、decltypeのオペランドに書くラムダ式だ。この制限緩和と、同じくC++20に追加されたステートレスラムダのデフォルト構築を組み合わせると、とても便利なコードが書ける。ラムダ式をデフォルト構築可能な型としてテンプレートに渡せるのだ。</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb87-1" title="1"><span class="kw">struct</span> person</a>
+<a class="sourceLine" id="cb87-2" title="2">{</a>
+<a class="sourceLine" id="cb87-3" title="3">    <span class="bu">std::</span>string name ;</a>
+<a class="sourceLine" id="cb87-4" title="4">    <span class="bu">std::</span>string address ;</a>
+<a class="sourceLine" id="cb87-5" title="5">} ;</a>
+<a class="sourceLine" id="cb87-6" title="6"></a>
+<a class="sourceLine" id="cb87-7" title="7"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb87-8" title="8">{</a>
+<a class="sourceLine" id="cb87-9" title="9">    <span class="bu">std::</span>set&lt; person, <span class="kw">decltype</span>([]( <span class="kw">auto</span> &amp;&amp; a, <span class="kw">auto</span> &amp;&amp; b ) { <span class="cf">return</span> a.name &lt; b.name ; }) &gt; name_sorted_set ;</a>
+<a class="sourceLine" id="cb87-10" title="10">}</a></code></pre></div>
+<p>ラムダ式が未評価式の文脈で使えるようになったので、decltypeの中にラムダ式を書いて<code>std::set</code>の比較関数オブジェクトの型として渡せるようになった。しかも、ステートレスラムダ式はデフォルト構築可能なので、別途、値としての関数オブジェクトをコンストラクターに渡す必要はない。</p>
+<h4 id="requires-clause">requires-clause</h4>
+<p>requires-clauseは未評価式だが、これは通常の式とは文法が少し違っているので、括弧で囲まなければならない。そして、ラムダ式を評価した結果の型はクロージャーオブジェクトの型でbool型ではないので、ラムダ式だけを書くことはできない。カンマ演算子を使うか、boolを返すラムダ式を関数呼び出しする必要がある。</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb88-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb88-2" title="2">    <span class="kw">requires</span> ([]{}, <span class="kw">true</span>) &amp;&amp; ([]{<span class="cf">return</span> <span class="kw">true</span> ;}())</a>
+<a class="sourceLine" id="cb88-3" title="3"><span class="dt">void</span> f() ;</a></code></pre></div>
+<p>どちらも実用上の意味はない。</p>
+<h2 id="no_unique_address-空のオブジェクトの言語サポート">[[no_unique_address]]: 空のオブジェクトの言語サポート</h2>
+<p>[[no_unique_address]]は非staticデータメンバーのサイズをゼロにするための属性だ。</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb89-1" title="1"><span class="kw">struct</span> A {} ;</a>
+<a class="sourceLine" id="cb89-2" title="2"><span class="kw">struct</span> B {} ;</a>
+<a class="sourceLine" id="cb89-3" title="3"></a>
+<a class="sourceLine" id="cb89-4" title="4"><span class="kw">struct</span> C</a>
+<a class="sourceLine" id="cb89-5" title="5">{</a>
+<a class="sourceLine" id="cb89-6" title="6">    [[<span class="at"> no_unique_address </span>]] A a ;</a>
+<a class="sourceLine" id="cb89-7" title="7">    [[<span class="at"> no_unique_address </span>]] B b ;</a>
+<a class="sourceLine" id="cb89-8" title="8">} ;</a>
+<a class="sourceLine" id="cb89-9" title="9"></a>
+<a class="sourceLine" id="cb89-10" title="10"><span class="co">// 1でもよい</span></a>
+<a class="sourceLine" id="cb89-11" title="11"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>(C) ;</a></code></pre></div>
+<p>この場合、<code>&amp;C::a</code>と<code>&amp;C::b</code>の値が違う保証はない。</p>
+<p>[[no_unique_address]]を使っても、元々非ゼロのサイズを持つクラスのオブジェクトのサイズがゼロになるわけではない。</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb90-1" title="1"><span class="kw">struct</span> A { <span class="dt">int</span> data ;} ;</a>
+<a class="sourceLine" id="cb90-2" title="2"><span class="kw">struct</span> B { <span class="dt">int</span> data ; } ;</a>
+<a class="sourceLine" id="cb90-3" title="3"></a>
+<a class="sourceLine" id="cb90-4" title="4"><span class="kw">struct</span> C</a>
+<a class="sourceLine" id="cb90-5" title="5">{</a>
+<a class="sourceLine" id="cb90-6" title="6">    [[<span class="at"> no_unique_address </span>]] A a ;</a>
+<a class="sourceLine" id="cb90-7" title="7">    [[<span class="at"> no_unique_address </span>]] B b ;</a>
+<a class="sourceLine" id="cb90-8" title="8">} ;</a>
+<a class="sourceLine" id="cb90-9" title="9"></a>
+<a class="sourceLine" id="cb90-10" title="10"><span class="co">// sizeof(int)*2以上</span></a>
+<a class="sourceLine" id="cb90-11" title="11"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>(C) ;</a></code></pre></div>
+<p>また、たとえサイズをゼロにできる型であったとしても、同じ型を複数回使った場合は、サイズはゼロにならない。</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb91-1" title="1"><span class="kw">struct</span> A { } ;</a>
+<a class="sourceLine" id="cb91-2" title="2"><span class="kw">struct</span> B</a>
+<a class="sourceLine" id="cb91-3" title="3">{</a>
+<a class="sourceLine" id="cb91-4" title="4">    [[<span class="at"> no_unique_address </span>]] A a1 ;</a>
+<a class="sourceLine" id="cb91-5" title="5">    [[<span class="at"> no_unique_address </span>]] A a2 ;</a>
+<a class="sourceLine" id="cb91-6" title="6">} ;</a>
+<a class="sourceLine" id="cb91-7" title="7"></a>
+<a class="sourceLine" id="cb91-8" title="8"><span class="co">// 2以上</span></a>
+<a class="sourceLine" id="cb91-9" title="9"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>(B) ;</a></code></pre></div>
+<p>同じ型の異なるオブジェクトを区別できるようにするためだ。</p>
+<p>ビットフィールドには適用できない。</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb92-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb92-2" title="2">{</a>
+<a class="sourceLine" id="cb92-3" title="3">    <span class="co">// エラー</span></a>
+<a class="sourceLine" id="cb92-4" title="4">    [[<span class="at">no_unique_address</span>]] <span class="dt">int</span> x:<span class="dv">3</span> ;   </a>
+<a class="sourceLine" id="cb92-5" title="5">} ;</a></code></pre></div>
+<p>なぜこのような機能が追加されたのか</p>
+<p>C++では、すべてのオブジェクトは非ゼロのサイズを持っている。非staticデータメンバーを持たず、virtual関数も持たない空のクラスであっても、そのサイズは1以上ある。</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb93-1" title="1"><span class="kw">struct</span> empty { } ;</a>
+<a class="sourceLine" id="cb93-2" title="2"></a>
+<a class="sourceLine" id="cb93-3" title="3"><span class="co">// 1以上</span></a>
+<a class="sourceLine" id="cb93-4" title="4"><span class="bu">std::</span>size_t s = <span class="kw">sizeof</span>(empty) ;</a></code></pre></div>
+<p>この理由は、オブジェクトのアドレスを得るためと、配列のためだ。</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb94-1" title="1"><span class="kw">struct</span> empty { } ;</a>
+<a class="sourceLine" id="cb94-2" title="2"></a>
+<a class="sourceLine" id="cb94-3" title="3"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb94-4" title="4">{</a>
+<a class="sourceLine" id="cb94-5" title="5">    empty e;</a>
+<a class="sourceLine" id="cb94-6" title="6">    <span class="co">// アドレスを得る</span></a>
+<a class="sourceLine" id="cb94-7" title="7">    empty * p = &amp;e ;</a>
+<a class="sourceLine" id="cb94-8" title="8">    <span class="co">// 配列</span></a>
+<a class="sourceLine" id="cb94-9" title="9">    empty a[<span class="dv">10</span>] ;</a>
+<a class="sourceLine" id="cb94-10" title="10"></a>
+<a class="sourceLine" id="cb94-11" title="11">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb94-12" title="12">    <span class="dt">bool</span> b = (a + <span class="dv">3</span>) == (a + <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb94-13" title="13">}</a></code></pre></div>
+<p>オブジェクトが本質的に空であっても、1以上のサイズを持つということは、そのようなオブジェクトを複数もつクラスは、オブジェクトの個数だけ無駄にサイズが増えることを意味する。本質的に空であれば、そのようなオブジェクトを持たなければいいのではないかと考えるかも知れない。しかし、場合によってはオブジェクトを持たざるを得ない場合もある。</p>
+<p>例えば、何らかのデータ構造で多数の値を管理するコンテナークラスを考える。このコンテナークラスはデータ構造のために、要素同士の比較と、要素のハッシュ値を必要とする。そのための処理はユーザーが関数オブジェクトとして提供する。</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb95-1" title="1"><span class="kw">template</span> &lt;</a>
+<a class="sourceLine" id="cb95-2" title="2">    <span class="kw">typename</span> T,         <span class="co">// 要素型</span></a>
+<a class="sourceLine" id="cb95-3" title="3">    <span class="kw">typename</span> Compare,   <span class="co">// 要素同士の比較</span></a>
+<a class="sourceLine" id="cb95-4" title="4">    <span class="kw">typename</span> Hasher &gt;    <span class="co">// 要素のハッシュ値</span></a>
+<a class="sourceLine" id="cb95-5" title="5"><span class="kw">struct</span> Container</a>
+<a class="sourceLine" id="cb95-6" title="6">{</a>
+<a class="sourceLine" id="cb95-7" title="7">    Compare c ;</a>
+<a class="sourceLine" id="cb95-8" title="8">    Hasher h ;</a>
+<a class="sourceLine" id="cb95-9" title="9"></a>
+<a class="sourceLine" id="cb95-10" title="10">    T * ptr ;</a>
+<a class="sourceLine" id="cb95-11" title="11"></a>
+<a class="sourceLine" id="cb95-12" title="12">    Container( Compare c, Hasher h )</a>
+<a class="sourceLine" id="cb95-13" title="13">        c(c), h(h) { }</a>
+<a class="sourceLine" id="cb95-14" title="14">} ;</a></code></pre></div>
+<p>ここで、比較をするCompareやハッシュ値計算をするHasherは、本質的に空のオブジェクトかも知れない。</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb96-1" title="1"><span class="kw">struct</span> compare</a>
+<a class="sourceLine" id="cb96-2" title="2">{</a>
+<a class="sourceLine" id="cb96-3" title="3">    <span class="dt">bool</span> <span class="kw">operator</span> ()( <span class="kw">auto</span> <span class="at">const</span> &amp; a, <span class="kw">auto</span> <span class="at">const</span> &amp; b ) <span class="at">const</span> ;</a>
+<a class="sourceLine" id="cb96-4" title="4">} ;</a>
+<a class="sourceLine" id="cb96-5" title="5"></a>
+<a class="sourceLine" id="cb96-6" title="6"><span class="kw">struct</span> hasher</a>
+<a class="sourceLine" id="cb96-7" title="7">{</a>
+<a class="sourceLine" id="cb96-8" title="8">    <span class="dt">unsigned</span> <span class="dt">int</span> <span class="kw">operator</span>() ( <span class="kw">auto</span> <span class="at">const</span> &amp; obj ) <span class="at">const</span> ;</a>
+<a class="sourceLine" id="cb96-9" title="9">} ;</a></code></pre></div>
+<p>しかしオブジェクトのサイズは少なくとも1は必要だ。すると先程のContainerクラスのデータメンバーc, hがそれぞれ1のサイズを持つとすると、クラス全体のサイズは少なくとも2バイト増えることになる。しかし現実には、クラスのサイズ増加はさらに大きい。</p>
+<p>筆者の環境では、以下のコードのサイズは16だ。</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb97-1" title="1"><span class="co">// 筆者の環境では16</span></a>
+<a class="sourceLine" id="cb97-2" title="2"><span class="bu">std::</span>size_t size = <span class="kw">sizeof</span>( Container&lt;<span class="dt">int</span>, compare, hasher&gt; ) ;</a></code></pre></div>
+<p>これはなぜか。筆者の環境では、<code>sizeof(int *)</code>は<code>8</code>だ。筆者の環境では<code>alignof(int *)</code>は8なので、ptrは8バイトにアライメントされていなければならない。Containerクラスの配列が8バイトにアライメントされるためには、Containerクラスは少なくとも16バイトのサイズを持っていなければならないことになる。そのために6バイトのパディングバイトが発生する。</p>
+<p>この問題を回避するために、慣習的にEBO(Empty Base Optimization、空の基本クラス最適化)というコンパイラーの最適化を利用する技法が使われていた。これはC++の標準規格でも許されている最適化のための挙動だ。</p>
+<p>EBOとは、「基本クラスが空ならば、そのためにクラスのメモリーレイアウトで専用のストレージを確保しなくてもよい」というルールだ。</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">struct</span> A { } ;</a>
+<a class="sourceLine" id="cb98-2" title="2"><span class="kw">struct</span> B : A { } ;</a>
+<a class="sourceLine" id="cb98-3" title="3"><span class="kw">struct</span> C : B  { } ;</a>
+<a class="sourceLine" id="cb98-4" title="4"></a>
+<a class="sourceLine" id="cb98-5" title="5"><span class="co">// 1でもよい</span></a>
+<a class="sourceLine" id="cb98-6" title="6"><span class="bu">std::</span>size_t size = <span class="kw">sizeof</span>(C) ; </a></code></pre></div>
+<p>クラスAは本質的に空で、クラスBも同様に空だ。するとクラスCは基本クラスの分をストレージをクラスのメモリーレイアウトに含めなくてもよい。</p>
+<p>[[no_unique_address]]はEBOのような最適化を非staticデータメンバーにも提供する。</p>
+<p>サイズを0にできる本質的に空のクラスとは何か。これは実装依存だ。どのようなクラスが本質的に空でありサイズを0にできるかは実装により異なる。</p>
+<p>1つの目安としては、空ではない非staticデータメンバーがなく、空ではない基本クラスもなく、virtual関数もないクラスは、空になる可能性が高い。</p>
+<p>もし本質的に空のオブジェクトであるデータメンバーc, hがオブジェクトとしてのサイズを持たなければ、Containerクラスが本質的に必要なのはポインターひとつ分のサイズだけだ。そこで、[[no_unique_address]]の出番となる。</p>
+<p>[[no_unique_address]]はクラスの非staticデータメンバーの宣言に使うことができる。この属性が使われたデータメンバーのオブジェクトが空であり、サイズをゼロにできるとき、クラスのサブオブジェクトとしてのサイズがゼロになる。そのようなデータメンバーのアドレスは他のデータメンバーのアドレスと異なる保証はない。</p>
+<h2 id="range-based-forのカスタマイゼーションポイントの検索方法の変更">Range-based forのカスタマイゼーションポイントの検索方法の変更</h2>
+<p>以下のようなRange-based forは、</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb99-1" title="1"><span class="cf">for</span> (初期化文 宣言 : 式 ) 文</a></code></pre></div>
+<p>以下のように変形される。</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb100-1" title="1">{</a>
+<a class="sourceLine" id="cb100-2" title="2">    初期化文</a>
+<a class="sourceLine" id="cb100-3" title="3">    <span class="kw">auto</span> &amp;&amp; range = 式</a>
+<a class="sourceLine" id="cb100-4" title="4">    <span class="kw">auto</span> begin = begin-expr ;</a>
+<a class="sourceLine" id="cb100-5" title="5">    <span class="kw">auto</span> end = end-expr ;</a>
+<a class="sourceLine" id="cb100-6" title="6">    <span class="cf">for</span> ( ; begin != end ; ++begin ) {</a>
+<a class="sourceLine" id="cb100-7" title="7">        宣言 = * begin ;</a>
+<a class="sourceLine" id="cb100-8" title="8">        文</a>
+<a class="sourceLine" id="cb100-9" title="9">    }</a>
+<a class="sourceLine" id="cb100-10" title="10">}</a></code></pre></div>
+<p>具体的に書くと、以下のようなコード</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb101-1" title="1"><span class="cf">for</span> ( <span class="kw">auto</span> r = f() ; <span class="kw">auto</span> i : r )</a>
+<a class="sourceLine" id="cb101-2" title="2">    g(i)</a></code></pre></div>
+<p>のようなコードは</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb102-1" title="1">{</a>
+<a class="sourceLine" id="cb102-2" title="2">    <span class="kw">auto</span> r = f() ;</a>
+<a class="sourceLine" id="cb102-3" title="3">    <span class="kw">auto</span> &amp;&amp; range = r ;</a>
+<a class="sourceLine" id="cb102-4" title="4">    <span class="kw">auto</span> begin = begin-expr ;</a>
+<a class="sourceLine" id="cb102-5" title="5">    <span class="kw">auto</span> end = end-expr ;</a>
+<a class="sourceLine" id="cb102-6" title="6">    <span class="cf">for</span> ( ; begin != end ; ++begin ) {</a>
+<a class="sourceLine" id="cb102-7" title="7">        <span class="kw">auto</span> i = * begin ;</a>
+<a class="sourceLine" id="cb102-8" title="8">        g(i) ;</a>
+<a class="sourceLine" id="cb102-9" title="9">    }</a>
+<a class="sourceLine" id="cb102-10" title="10">        </a>
+<a class="sourceLine" id="cb102-11" title="11">}</a></code></pre></div>
+<p>のようになる。</p>
+<p>ここで、<code>begin-expr</code>と<code>end-expr</code>が具体的にどういう式になるかは、<code>range</code>の型によって変わる。</p>
+<p>C++17ではおおむね以下のようなルールになっている。</p>
+<ol type="1">
+<li>rangeの型が配列の場合、<code>begin-expr</code>は<code>range</code>、<code>end-expr</code>は<code>range + N</code>となる。Nは配列の要素数</li>
+<li>rangeの型がクラスで、メンバー関数にbegin/endの<em>いずれか</em>があった場合、 <code>begin-expr</code>は<code>range.begin()</code>、<code>end-expr</code>は<code>range.end()</code>となる</li>
+<li>それ以外の場合、<code>begin-expr</code>は<code>begin(range)</code>、<code>end-expr</code>は<code>end(range)</code>となる。ここで<code>begin</code>と<code>end</code>はADLによって名前検索される</li>
+</ol>
+<p>このとき、<code>begin</code>と<code>end</code>のことをカスタマイゼーションポイント(customization point)という。<code>begin</code>と<code>end</code>をユーザーが書くことで、クラスをrange-based forに対応させることができる。対応させるためのカスタマイズができるポイントなのでカスタマイゼーションポイントという。</p>
+<p>C++17のルールには不備がある。具体的には2番めのルールのうちの「メンバー関数にbegin/endの<em>いずれか</em>があった場合」というところだ。</p>
+<p>あるクラスに<code>begin</code>か<code>end</code>という名前のメンバー関数が片方だけあった場合でも、メンバー関数がカスタマイゼーションポイントとして使われてしまう。</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb103-1" title="1"><span class="kw">namespace</span> library {</a>
+<a class="sourceLine" id="cb103-2" title="2"></a>
+<a class="sourceLine" id="cb103-3" title="3"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb103-4" title="4">{</a>
+<a class="sourceLine" id="cb103-5" title="5">    <span class="co">// たまたま名前がかぶっただけの</span></a>
+<a class="sourceLine" id="cb103-6" title="6">    <span class="co">// イテレーターを返すわけではない</span></a>
+<a class="sourceLine" id="cb103-7" title="7">    <span class="co">// 別の目的のメンバー関数</span></a>
+<a class="sourceLine" id="cb103-8" title="8">    <span class="dt">void</span> begin() ;</a>
+<a class="sourceLine" id="cb103-9" title="9">} ;</a>
+<a class="sourceLine" id="cb103-10" title="10"></a>
+<a class="sourceLine" id="cb103-11" title="11"><span class="co">// イテレーターを返すカスタマイゼーションポイント</span></a>
+<a class="sourceLine" id="cb103-12" title="12"><span class="kw">auto</span> begin( S &amp; ) ;</a>
+<a class="sourceLine" id="cb103-13" title="13"><span class="kw">auto</span> end( S &amp; ) ;</a>
+<a class="sourceLine" id="cb103-14" title="14"></a>
+<a class="sourceLine" id="cb103-15" title="15">}</a>
+<a class="sourceLine" id="cb103-16" title="16"></a>
+<a class="sourceLine" id="cb103-17" title="17"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb103-18" title="18">{</a>
+<a class="sourceLine" id="cb103-19" title="19">    library::S s ;</a>
+<a class="sourceLine" id="cb103-20" title="20">    <span class="co">// エラー</span></a>
+<a class="sourceLine" id="cb103-21" title="21">    <span class="co">// s.end()は見つからない</span></a>
+<a class="sourceLine" id="cb103-22" title="22">    <span class="cf">for</span> ( <span class="kw">auto</span> i : s )</a>
+<a class="sourceLine" id="cb103-23" title="23">        do_somethign(i) ;</a>
+<a class="sourceLine" id="cb103-24" title="24">         </a>
+<a class="sourceLine" id="cb103-25" title="25">}</a></code></pre></div>
+<p>このため、C++20では、2番めのルールに変更が加えられた。</p>
+<ol start="2" type="1">
+<li>rangeの型がクラスで、メンバー関数にbegin/endの<em>両方</em>があった場合、 <code>begin-expr</code>は<code>range.begin()</code>、<code>end-expr</code>は<code>range.end()</code>となる</li>
+</ol>
+<p>2番目のルールは<code>begin/end</code>の両方のメンバー関数が同時に存在した場合のみ使われる。もしクラスに<code>begin</code>, <code>end</code>両方のメンバー関数がない場合は、3番目のルールであるADLによるカスタマイゼーションポイントが使われる。</p>
+<h2 id="構造化束縛をアクセス可能なメンバーにも適用">構造化束縛をアクセス可能なメンバーにも適用</h2>
+<p>構造化束縛の以前の規定では、publicなメンバーのみのクラス型しか束縛できなかった。</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb104-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb104-2" title="2">{</a>
+<a class="sourceLine" id="cb104-3" title="3">    <span class="kw">friend</span> <span class="dt">void</span> f() ;</a>
+<a class="sourceLine" id="cb104-4" title="4"><span class="kw">private</span> :</a>
+<a class="sourceLine" id="cb104-5" title="5">    <span class="dt">int</span> a ;</a>
+<a class="sourceLine" id="cb104-6" title="6"><span class="kw">public</span> :</a>
+<a class="sourceLine" id="cb104-7" title="7">    <span class="dt">int</span> b ;</a>
+<a class="sourceLine" id="cb104-8" title="8">} ;</a>
+<a class="sourceLine" id="cb104-9" title="9"></a>
+<a class="sourceLine" id="cb104-10" title="10"><span class="dt">void</span> f( S s )</a>
+<a class="sourceLine" id="cb104-11" title="11">{</a>
+<a class="sourceLine" id="cb104-12" title="12">    <span class="co">// かつてのC++17の文面ではエラー</span></a>
+<a class="sourceLine" id="cb104-13" title="13">    <span class="co">// publicなメンバーのみではない</span></a>
+<a class="sourceLine" id="cb104-14" title="14">    <span class="kw">auto</span>[ a, b ] = s ;</a>
+<a class="sourceLine" id="cb104-15" title="15">}</a></code></pre></div>
+<p>この規定は一貫性に欠ける。というのも、C++ではアクセス指定は名前の利用時にアクセス指定の確認が行われるだけで、名前の発見を妨げたりはしないものだからだ。</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb105-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb105-2" title="2">{</a>
+<a class="sourceLine" id="cb105-3" title="3"><span class="kw">private</span> :</a>
+<a class="sourceLine" id="cb105-4" title="4">    <span class="dt">void</span> f( <span class="dt">int</span> ) ;</a>
+<a class="sourceLine" id="cb105-5" title="5"><span class="kw">public</span> :</a>
+<a class="sourceLine" id="cb105-6" title="6">    <span class="dt">void</span> f( <span class="dt">double</span> ) ;</a>
+<a class="sourceLine" id="cb105-7" title="7">} ;</a>
+<a class="sourceLine" id="cb105-8" title="8"></a>
+<a class="sourceLine" id="cb105-9" title="9"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb105-10" title="10">{</a>
+<a class="sourceLine" id="cb105-11" title="11">    S s ;</a>
+<a class="sourceLine" id="cb105-12" title="12">    <span class="co">// アクセスチェックによりエラー</span></a>
+<a class="sourceLine" id="cb105-13" title="13">    s.f(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb105-14" title="14">}</a></code></pre></div>
+<p>この例では、名前解決により<code>S::f(int)</code>と<code>S::f(double)</code>が発見され、オーバーロード解決により<code>S::f(int)</code>が選ばれる。しかし、<code>S::f(int)</code>はprivateメンバーなのでアクセス指定の確認に引っかかりエラーとなる。アクセス指定は名前を使うときに確認されるのであって、名前検索で見つからなくなるわけでない。</p>
+<p>C++20では、この規定を変更し、構造化束縛でもアクセス指定にかかわらずすべてのメンバーが考慮されるようになった。アクセス指定の確認は通常通り、名前を使うときに行われる。</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb106-2" title="2">{</a>
+<a class="sourceLine" id="cb106-3" title="3">    <span class="kw">friend</span> <span class="dt">void</span> f() ;</a>
+<a class="sourceLine" id="cb106-4" title="4"><span class="kw">private</span> :</a>
+<a class="sourceLine" id="cb106-5" title="5">    <span class="dt">int</span> a ;</a>
+<a class="sourceLine" id="cb106-6" title="6"><span class="kw">public</span> :</a>
+<a class="sourceLine" id="cb106-7" title="7">    <span class="dt">int</span> b  ;</a>
+<a class="sourceLine" id="cb106-8" title="8">} ;</a>
+<a class="sourceLine" id="cb106-9" title="9"></a>
+<a class="sourceLine" id="cb106-10" title="10"><span class="dt">void</span> f( S s )</a>
+<a class="sourceLine" id="cb106-11" title="11">{</a>
+<a class="sourceLine" id="cb106-12" title="12">    <span class="co">// OK</span></a>
+<a class="sourceLine" id="cb106-13" title="13">    <span class="co">// fはSのfriendなのでprivateメンバーにアクセスできる</span></a>
+<a class="sourceLine" id="cb106-14" title="14">    <span class="kw">auto</span>[ a,b ] = s ;</a>
+<a class="sourceLine" id="cb106-15" title="15">}</a>
+<a class="sourceLine" id="cb106-16" title="16"></a>
+<a class="sourceLine" id="cb106-17" title="17"><span class="dt">void</span> g( S s )</a>
+<a class="sourceLine" id="cb106-18" title="18">{</a>
+<a class="sourceLine" id="cb106-19" title="19">    <span class="co">// エラー</span></a>
+<a class="sourceLine" id="cb106-20" title="20">    <span class="co">// privateメンバーへのアクセス</span></a>
+<a class="sourceLine" id="cb106-21" title="21">    <span class="kw">auto</span> [ a, b ] = s ;</a>
+<a class="sourceLine" id="cb106-22" title="22">}</a></code></pre></div>
+<p>この変更はC++の問題の修正にあたり、C++20だけではなく、C++17にも適用される。そのためC++17の挙動も変わる。</p>
+<h2 id="構造化束縛のカスタマイゼーションポイントを名前検索するルールの緩和">構造化束縛のカスタマイゼーションポイントを名前検索するルールの緩和</h2>
+<p>この機能を説明する前に、まずC++17の構造化束縛のおさらいが必要だ。すでに構造化束縛について完全に理解している読者は読み飛ばしても良い。</p>
+<h3 id="c17の構造化束縛のおさらい">C++17の構造化束縛のおさらい</h3>
+<p>C++17の構造化束縛は複数の要素を持つ型から、その要素をそれぞれ名前をつけて変数に代入するコア言語機能だ。</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb107-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb107-2" title="2">{</a>
+<a class="sourceLine" id="cb107-3" title="3">    <span class="dt">int</span> a[<span class="dv">3</span>] = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>} ;</a>
+<a class="sourceLine" id="cb107-4" title="4">    <span class="kw">auto</span> [a0, a1. a2] = a ;</a>
+<a class="sourceLine" id="cb107-5" title="5">    <span class="co">// a0 = a[0], a1 = a[1], a2 = a[2]</span></a>
+<a class="sourceLine" id="cb107-6" title="6">}</a></code></pre></div>
+<p>その文法はキーワード<code>auto</code>に続いて<code>[identifier1, identifier2, ...]</code>のように識別子のリストを書く。そして、初期化子を、<code>= 代入式</code>、もしくは<code>{代入式}</code>、もしくは<code>(代入式)</code>のように書く。代入式は配列、もしくは非unionなクラス型でなければならない。</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb108-1" title="1"><span class="dt">int</span> main ()</a>
+<a class="sourceLine" id="cb108-2" title="2">{</a>
+<a class="sourceLine" id="cb108-3" title="3">    <span class="dt">int</span> x[<span class="dv">3</span>] = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>} ;</a>
+<a class="sourceLine" id="cb108-4" title="4"></a>
+<a class="sourceLine" id="cb108-5" title="5">    <span class="kw">auto</span> [a,b,c] = x ;</a>
+<a class="sourceLine" id="cb108-6" title="6">    <span class="kw">auto</span> [d,e,f] {x} ;</a>
+<a class="sourceLine" id="cb108-7" title="7">    <span class="kw">auto</span> [g,h,i] (x) ;</a>
+<a class="sourceLine" id="cb108-8" title="8">}</a></code></pre></div>
+<p>構造化束縛は、それぞれの識別子のリストを変数としてそれぞれに対応する要素を代入していく。</p>
+<p>配列の場合は最初の識別子の変数に配列の最初の要素を、次の識別子に変数に配列の次の要素を、と代入していく。</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb109-1" title="1"><span class="dt">int</span> x[<span class="dv">3</span>] = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>} ;</a>
+<a class="sourceLine" id="cb109-2" title="2"><span class="kw">auto</span> [a,b,c] = x ;</a>
+<a class="sourceLine" id="cb109-3" title="3"><span class="co">// a = a[0], b = a[1], c = a[2]</span></a></code></pre></div>
+<p>カスタマイゼーションポイントのないクラスの場合、非staticデータメンバーを宣言順に代入していく。</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb110-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb110-2" title="2">{</a>
+<a class="sourceLine" id="cb110-3" title="3">    <span class="dt">int</span> a, b, c ;</a>
+<a class="sourceLine" id="cb110-4" title="4">} ;</a>
+<a class="sourceLine" id="cb110-5" title="5"></a>
+<a class="sourceLine" id="cb110-6" title="6"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb110-7" title="7">{</a>
+<a class="sourceLine" id="cb110-8" title="8">    S s = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>} ;</a>
+<a class="sourceLine" id="cb110-9" title="9">    <span class="kw">auto</span> [a,b,c] = s ;</a>
+<a class="sourceLine" id="cb110-10" title="10">    <span class="co">// a = s.a, b = s.b, c = s.c</span></a>
+<a class="sourceLine" id="cb110-11" title="11">}</a></code></pre></div>
+<p>カスタマイゼーションポイントは、<code>std::tuple_size&lt;E&gt;</code>, <code>std::tuple_element&lt;i,E&gt;</code>, <code>get&lt;i&gt;</code>の3つがある。この3つのカスタマイゼーションポイントを実装することで、ユーザー定義型を構造化束縛に対応させることができる。</p>
+<p>C++の標準ライブラリでは、<code>std::pair</code>と<code>std::tuple</code>が対応している。</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb111-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb111-2" title="2">{</a>
+<a class="sourceLine" id="cb111-3" title="3">    <span class="bu">std::</span>pair p = {<span class="dv">1</span>, <span class="fl">1.0</span>} ;</a>
+<a class="sourceLine" id="cb111-4" title="4">    <span class="kw">auto</span> [a,b] = p ;</a>
+<a class="sourceLine" id="cb111-5" title="5">    <span class="co">// aはint型で値は1</span></a>
+<a class="sourceLine" id="cb111-6" title="6">    <span class="co">// bはdouble型で値は1.0</span></a>
+<a class="sourceLine" id="cb111-7" title="7"></a>
+<a class="sourceLine" id="cb111-8" title="8">    <span class="bu">std::</span>tuple t = {<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>} ;</a>
+<a class="sourceLine" id="cb111-9" title="9">    <span class="kw">auto</span> [c,d,e] = t ;</a>
+<a class="sourceLine" id="cb111-10" title="10">    <span class="co">// 型はすべてint</span></a>
+<a class="sourceLine" id="cb111-11" title="11">    <span class="co">// c = 1, d = 2, e = 3</span></a>
+<a class="sourceLine" id="cb111-12" title="12">}</a></code></pre></div>
+<p><code>E</code>を構造化束縛の初期化子の式の型とする。</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb112-1" title="1"><span class="co">// Eはdecltype(expr)</span></a>
+<a class="sourceLine" id="cb112-2" title="2"><span class="kw">auto</span> [a,b,c] = expr ;</a></code></pre></div>
+<p>このとき、<code>expr</code>の式を評価した結果の型、つまり<code>decltype(expr)</code>が<code>E</code>となる。</p>
+<p>構造化束縛の要素数は<code>std:::tuple_size&lt;E&gt;::value</code>で指定する。ユーザーはテンプレートの特殊化や部分的特殊化で対応する。</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb113-1" title="1"><span class="co">// 構造化束縛に対応させたいユーザー定義型</span></a>
+<a class="sourceLine" id="cb113-2" title="2"><span class="kw">class</span> UserDefinedType { } ;</a>
+<a class="sourceLine" id="cb113-3" title="3"></a>
+<a class="sourceLine" id="cb113-4" title="4"><span class="kw">template</span> &lt; &gt;</a>
+<a class="sourceLine" id="cb113-5" title="5"><span class="kw">struct</span> <span class="bu">std::</span>tuple_size&lt; UserDefinedType &gt;</a>
+<a class="sourceLine" id="cb113-6" title="6">{</a>
+<a class="sourceLine" id="cb113-7" title="7">    <span class="co">// 構造化束縛の要素数を指定</span></a>
+<a class="sourceLine" id="cb113-8" title="8">    <span class="at">static</span> <span class="kw">constexpr</span> <span class="bu">std::</span>size_t value = ... ;</a>
+<a class="sourceLine" id="cb113-9" title="9">} ;</a></code></pre></div>
+<p>構造化束縛の<code>i</code>番目の要素の型は<code>std::tuple_element&lt;i, E&gt;::type</code>で指定する。ユーザーはテンプレートの特殊化や部分的特殊化で対応する。</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb114-1" title="1"><span class="co">// 構造化束縛に対応させたいユーザー定義型</span></a>
+<a class="sourceLine" id="cb114-2" title="2"><span class="kw">class</span> UserDefinedType { } ;</a>
+<a class="sourceLine" id="cb114-3" title="3"></a>
+<a class="sourceLine" id="cb114-4" title="4"><span class="kw">template</span>  &lt; <span class="bu">std::</span>size_t i &gt;</a>
+<a class="sourceLine" id="cb114-5" title="5"><span class="kw">struct</span> <span class="bu">std::</span>tuple_element&lt; i, UserDefinedType &gt;</a>
+<a class="sourceLine" id="cb114-6" title="6">{</a>
+<a class="sourceLine" id="cb114-7" title="7">    <span class="co">// i番目の要素の型</span></a>
+<a class="sourceLine" id="cb114-8" title="8">    <span class="kw">using</span> type = ... ; </a>
+<a class="sourceLine" id="cb114-9" title="9">} ;</a></code></pre></div>
+<p>構造化束縛の<code>i</code>番目の変数の値は<code>get&lt;i&gt;</code>で指定する。この<code>get</code>は関数テンプレートで第一テンプレート仮引数に非型テンプレート仮引数を取る。この仮引数に対する実引数は、<code>i</code>番目の要素という意味で、関数テンプレートの戻り値は<code>i</code>番目の要素に対応する値を返す。</p>
+<p><code>get</code>テンプレートには2種類ある。Eのメンバー関数テンプレートと、ADLによって発見されるフリー関数だ。</p>
+<p><code>E</code>のメンバー関数テンプレートの場合、型<code>E</code>自体のメンバー関数テンプレートとして<code>get</code>を実装する。</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">class</span> UserDefinedType</a>
+<a class="sourceLine" id="cb115-2" title="2">{</a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="kw">public</span> :</a>
+<a class="sourceLine" id="cb115-4" title="4">    <span class="kw">template</span> &lt; <span class="bu">std::</span>size_t i &gt;</a>
+<a class="sourceLine" id="cb115-5" title="5">    <span class="kw">auto</span> get()</a>
+<a class="sourceLine" id="cb115-6" title="6">    {   <span class="co">// i番目の要素の値を返す</span></a>
+<a class="sourceLine" id="cb115-7" title="7">        <span class="cf">return</span> ... ;</a>
+<a class="sourceLine" id="cb115-8" title="8">    }</a>
+<a class="sourceLine" id="cb115-9" title="9">} ;</a></code></pre></div>
+<p>ADLによって発見されるフリー関数の場合、<code>E</code>の連想名前空間に名前<code>get</code>の関数テンプレートを書く。テンプレート実引数は値を返すべき<code>i</code>番目の要素の<code>i</code>で、関数実引数は、構造化束縛の初期化子を評価した結果の型<code>E</code>のオブジェクトだ。</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb116-1" title="1"><span class="co">// 連想名前空間はグローバル名前空間</span></a>
+<a class="sourceLine" id="cb116-2" title="2"><span class="kw">class</span> UserDefinedType {} ;</a>
+<a class="sourceLine" id="cb116-3" title="3"></a>
+<a class="sourceLine" id="cb116-4" title="4"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t i &gt;</a>
+<a class="sourceLine" id="cb116-5" title="5"><span class="kw">auto</span> get( UserDefinedType &amp; obj )</a>
+<a class="sourceLine" id="cb116-6" title="6">{   <span class="co">// i番目の要素の値を返す</span></a>
+<a class="sourceLine" id="cb116-7" title="7">    <span class="cf">return</span> ... ;</a>
+<a class="sourceLine" id="cb116-8" title="8">}</a></code></pre></div>
+<p>型<code>E</code>にメンバー関数テンプレート<code>get</code>があり、その第一テンプレート仮引数が非型テンプレート仮引数の場合、メンバーの<code>get</code>が使われる。そうでない場合は、ADLによってフリー関数テンプレート<code>get</code>が探される。</p>
+<p>以上を踏まえて、具体的に自作のクラスを構造化束縛に対応させてみよう。</p>
+<p>今回実装するのは以下のようなクラスだ。</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb117-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb117-2" title="2">{</a>
+<a class="sourceLine" id="cb117-3" title="3">    index_generator&lt;<span class="dv">3</span>&gt; i3 ;</a>
+<a class="sourceLine" id="cb117-4" title="4">    <span class="kw">auto</span> [a,b,c] = i3 ;</a>
+<a class="sourceLine" id="cb117-5" title="5">    <span class="co">// 型はすべてstd::size_t</span></a>
+<a class="sourceLine" id="cb117-6" title="6">    <span class="co">// a = 0, b = 1, c = 2</span></a>
+<a class="sourceLine" id="cb117-7" title="7"></a>
+<a class="sourceLine" id="cb117-8" title="8">    index_generator&lt;<span class="dv">5</span>&gt; i5 ;</a>
+<a class="sourceLine" id="cb117-9" title="9">    <span class="kw">auto</span> [d,e,f,g,h] = i5 ;</a>
+<a class="sourceLine" id="cb117-10" title="10">    <span class="co">// 型はすべてstd::size_t</span></a>
+<a class="sourceLine" id="cb117-11" title="11">    <span class="co">// d = 0, e = 1, f = 2, g = 3, h = 4</span></a>
+<a class="sourceLine" id="cb117-12" title="12">}</a></code></pre></div>
+<p><code>index_generator&lt;I&gt;</code>のオブジェクトは、構造化束縛の初期化子として使う問、I個の要素を持ち、要素の型はすべて<code>std::size_t</code>型で、<code>i</code>番目の要素の値は<code>i</code>になる。ただし、最初の要素は0番目、次の要素は<code>1</code>番目、…、最後の要素は<code>I-1</code>番目だ。</p>
+<p>まずクラスを定義しよう。</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb118-1" title="1"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t &gt;</a>
+<a class="sourceLine" id="cb118-2" title="2"><span class="kw">struct</span> index_generator { } ;</a></code></pre></div>
+<p>クラス定義はこれだけだ。このクラスは実際に要素をデータメンバーで持っているわけではない。本質的には空だ。構造化束縛の初期化子として使った場合に上のような挙動になるだけなので、これだけでよい。テンプレート仮引数には名前すら付いていないが、クラスの定義内では使わないので、これでいい。</p>
+<p>構造化束縛の要素数を指定する<code>std::tuple_size</code>のカスタマイゼーションポイントを実装する。</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb119-1" title="1"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t I &gt;</a>
+<a class="sourceLine" id="cb119-2" title="2"><span class="kw">struct</span> <span class="bu">std::</span>tuple_size&lt; index_generator&lt;I&gt; &gt;</a>
+<a class="sourceLine" id="cb119-3" title="3">{</a>
+<a class="sourceLine" id="cb119-4" title="4">    <span class="kw">constexpr</span> <span class="at">static</span> <span class="bu">std::</span>size_t value = I ;</a>
+<a class="sourceLine" id="cb119-5" title="5">} ;</a></code></pre></div>
+<p><code>index_generator&lt;I&gt;</code>の構造化束縛の要素数は<code>I</code>個なので、部分的特殊化で<code>index_generator&lt;I&gt;</code>の<code>I</code>を得て、その<code>I</code>をそのまま指定すればよい。ちなみにこのような名前空間化のテンプレートの特殊化の省略記法はC++17からの機能で、C++14以前では以下のように書かなければならなかった。</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb120-1" title="1"><span class="kw">namespace</span> std</a>
+<a class="sourceLine" id="cb120-2" title="2">{</a>
+<a class="sourceLine" id="cb120-3" title="3">    <span class="kw">template</span> &lt; <span class="bu">std::</span>size_t I &gt;</a>
+<a class="sourceLine" id="cb120-4" title="4">    <span class="kw">struct</span> tuple_size&lt; index_generator&lt;I&gt; &gt;</a>
+<a class="sourceLine" id="cb120-5" title="5">    {</a>
+<a class="sourceLine" id="cb120-6" title="6">        <span class="kw">constexpr</span> <span class="at">static</span> <span class="dt">size_t</span> value = I ;</a>
+<a class="sourceLine" id="cb120-7" title="7">    } ;</a>
+<a class="sourceLine" id="cb120-8" title="8">}</a></code></pre></div>
+<p>もっとも、構造化束縛はC++17からの機能なので、このようなコードを書く必要はない。</p>
+<p>構造化束縛の各要素の型を指定する<code>tuple_element</code>のカスタマイゼーションポイントを実装する。</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb121-1" title="1"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t i, <span class="bu">std::</span>size_t _ &gt; </a>
+<a class="sourceLine" id="cb121-2" title="2"><span class="kw">struct</span> <span class="bu">std::</span>tuple_element&lt; i, index_generator&lt;_&gt; &gt;</a>
+<a class="sourceLine" id="cb121-3" title="3">{</a>
+<a class="sourceLine" id="cb121-4" title="4">    <span class="kw">using</span> type = <span class="bu">std::</span>size_t ;</a>
+<a class="sourceLine" id="cb121-5" title="5">} ;</a></code></pre></div>
+<p>今回の場合、型はすべて<code>std::size_t</code>型だ。そのため、<code>tuple_element</code>の部分的特殊化を書き、<code>index_generator</code>のすべての特殊化に対してネストされた型名<code>type</code>を<code>std::size_t</code>型にする。</p>
+<p><code>get&lt;i&gt;</code>を実装する方法は2つある。<code>E</code>のメンバー関数テンプレートと、フリー関数テンプレートだ。</p>
+<p><code>get&lt;i&gt;</code>をメンバー関数テンプレートで実装する。</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb122-1" title="1"></a>
+<a class="sourceLine" id="cb122-2" title="2"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t I &gt;</a>
+<a class="sourceLine" id="cb122-3" title="3"><span class="kw">struct</span> index_generator</a>
+<a class="sourceLine" id="cb122-4" title="4">{</a>
+<a class="sourceLine" id="cb122-5" title="5">    <span class="kw">template</span> &lt; <span class="bu">std::</span>size_t i &gt;</a>
+<a class="sourceLine" id="cb122-6" title="6">    <span class="at">static</span> <span class="kw">constexpr</span> <span class="kw">auto</span> get() { <span class="cf">return</span> i ; }</a>
+<a class="sourceLine" id="cb122-7" title="7">} ;</a></code></pre></div>
+<p>今回、<code>E</code>のオブジェクトは空なので、特に<code>this</code>に依存することはない。そのためstaticメンバーでもよい。<code>i</code>番目の要素の値は<code>i</code>になるので、実装は単に<code>i</code>を返すだけだ。</p>
+<p>フリー関数テンプレートで実装する場合は以下のようになる。</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb123-1" title="1"><span class="kw">template</span> &lt; <span class="bu">std::</span>size_t i, <span class="bu">std::</span>size_t _ &gt;</a>
+<a class="sourceLine" id="cb123-2" title="2"><span class="kw">auto</span> get( index_generator&lt;_&gt; <span class="at">const</span> &amp; )</a>
+<a class="sourceLine" id="cb123-3" title="3">{</a>
+<a class="sourceLine" id="cb123-4" title="4">    <span class="cf">return</span> i ;</a>
+<a class="sourceLine" id="cb123-5" title="5">}</a></code></pre></div>
+<p>これも<code>i</code>をそのまま返せばよい。<code>index_generator</code>のオブジェクトは必要がないが、引数として受け取らなければならない。</p>
+<h3 id="c20による変更">C++20による変更</h3>
+<p>C++20では構造化束縛のカスタマイゼーションポイント<code>get</code>を探すルールが変更される。</p>
+<p>当初のC++17では、「構造化束縛の初期化子の型にメンバー関数<code>get</code>があった場合、メンバー関数が使われる。ない場合は、ADLにより<code>get</code>が探される」というルールになっていた。</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb124-1" title="1"><span class="kw">struct</span> ha<span class="va">s_get</span></a>
+<a class="sourceLine" id="cb124-2" title="2">{</a>
+<a class="sourceLine" id="cb124-3" title="3">    <span class="kw">template</span> &lt; <span class="bu">std::</span>size_t I &gt;</a>
+<a class="sourceLine" id="cb124-4" title="4">    <span class="kw">auto</span> get() ;</a>
+<a class="sourceLine" id="cb124-5" title="5">} ;</a>
+<a class="sourceLine" id="cb124-6" title="6"></a>
+<a class="sourceLine" id="cb124-7" title="7"><span class="kw">struct</span> no_get</a>
+<a class="sourceLine" id="cb124-8" title="8">{</a>
+<a class="sourceLine" id="cb124-9" title="9"></a>
+<a class="sourceLine" id="cb124-10" title="10">} ;</a>
+<a class="sourceLine" id="cb124-11" title="11"></a>
+<a class="sourceLine" id="cb124-12" title="12"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb124-13" title="13">{</a>
+<a class="sourceLine" id="cb124-14" title="14">    <span class="co">// has_get::getが使われる</span></a>
+<a class="sourceLine" id="cb124-15" title="15">    <span class="kw">auto</span>[a] = has_get{} ;</a>
+<a class="sourceLine" id="cb124-16" title="16">    <span class="co">// ADLによりgetが探される</span></a>
+<a class="sourceLine" id="cb124-17" title="17">    <span class="kw">auto</span>[b] = no_get{} ;</a>
+<a class="sourceLine" id="cb124-18" title="18">}</a></code></pre></div>
+<p>問題は、<code>get</code>という名前のメンバー関数があった場合、それがテンプレートでなくても問答無用で使われ、ADLによる名前検索は行われない。</p>
+<p>そこで、C++20では、たとえメンバー関数名<code>get</code>を発見した場合に、それが関数テンプレートで、かつ第一テンプレート仮引数が非型テンプレート仮引数である場合のみ使われ、それ以外の場合はADLによる名前探索を行うように変更された。これにより、たまたま<code>get</code>という名前のメンバー関数がある場合で、カスタマイゼーションポイントをADL経由で発見されるフリー関数で実装した場合でも、正しく動く。<code>get</code>という名前は標準ライブラリでもスマートポインターなどで使われているありふれた名前だ。衝突は十分にありえる。</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb125-1" title="1"><span class="kw">struct</span> A</a>
+<a class="sourceLine" id="cb125-2" title="2">{</a>
+<a class="sourceLine" id="cb125-3" title="3">    <span class="co">// 構造化束縛のカスタマイゼーションポイントではない</span></a>
+<a class="sourceLine" id="cb125-4" title="4">    <span class="co">// 理由：テンプレートではない</span></a>
+<a class="sourceLine" id="cb125-5" title="5">    <span class="dt">int</span> get() ;</a>
+<a class="sourceLine" id="cb125-6" title="6">} ;</a>
+<a class="sourceLine" id="cb125-7" title="7"></a>
+<a class="sourceLine" id="cb125-8" title="8"><span class="kw">struct</span> B</a>
+<a class="sourceLine" id="cb125-9" title="9">{</a>
+<a class="sourceLine" id="cb125-10" title="10">    <span class="co">// 構造化束縛のカスタマイゼーションポイントではない</span></a>
+<a class="sourceLine" id="cb125-11" title="11">    <span class="co">// 理由：第一テンプレート仮引数が非型テンプレート仮引数ではない</span></a>
+<a class="sourceLine" id="cb125-12" title="12">    <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb125-13" title="13">    <span class="dt">int</span> get() ;</a>
+<a class="sourceLine" id="cb125-14" title="14">} ;</a></code></pre></div>
+<p>この変更はC++17にもさかのぼって適用される。</p>
+<h2 id="文脈上型であることが明らかな場所での型としての依存名にtypename不要の制限緩和">文脈上型であることが明らかな場所での型としての依存名にtypename不要の制限緩和</h2>
+<p>C++20では依存名を型として使う際、文脈上型しか書けない一部の場所ではtypenameキーワードが不要になった。</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb126-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb126-2" title="2"><span class="co">// OK</span></a>
+<a class="sourceLine" id="cb126-3" title="3">T::type * f()</a>
+<a class="sourceLine" id="cb126-4" title="4">{</a>
+<a class="sourceLine" id="cb126-5" title="5">               <span class="co">// OK</span></a>
+<a class="sourceLine" id="cb126-6" title="6">    <span class="cf">return</span> <span class="kw">new</span> T::type ;</a>
+<a class="sourceLine" id="cb126-7" title="7">}</a></code></pre></div>
+<h3 id="依存名">依存名</h3>
+<p>C++のテンプレートでは、依存名という概念が存在する。依存名とは、テンプレート仮引数に依存する名前だ。例えばテンプレート仮引数名<code>T</code>がある場合、<code>T::type</code>は依存名だ。他にも<code>S&lt;T&gt;::type</code>も依存名になる。</p>
+<p>C++では実装上の都合で、テンプレートは宣言時に、それぞれの名前について、型なのか値なのかを判断する。例えば、</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb127-1" title="1">X * Y ;</a></code></pre></div>
+<p>というコードは、もし<code>X</code>が型であれば、「Xへのポインター型の変数Yの宣言文」だ。<code>X</code>が値であれば「XとYに二項演算子operator *を適用する式文」という意味になる。</p>
+<p>型テンプレート仮引数<code>T</code>に対して以下のようなコードがある場合、</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb128-1" title="1">T::type * x ;</a></code></pre></div>
+<p>C++のコンパイラーは、このコードだけでは<code>T::type</code>が型なのか値なのかがわからない。なぜならば、<code>T::type</code>は依存名なので、型にも値にもなりうるからだ</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb129-1" title="1"><span class="co">// T::typeが型である場合</span></a>
+<a class="sourceLine" id="cb129-2" title="2"><span class="kw">struct</span> A</a>
+<a class="sourceLine" id="cb129-3" title="3">{</a>
+<a class="sourceLine" id="cb129-4" title="4">    <span class="kw">using</span> type = <span class="dt">int</span> ;</a>
+<a class="sourceLine" id="cb129-5" title="5">} ;</a>
+<a class="sourceLine" id="cb129-6" title="6"></a>
+<a class="sourceLine" id="cb129-7" title="7"><span class="co">// T::typeが値である場合</span></a>
+<a class="sourceLine" id="cb129-8" title="8"><span class="kw">struct</span> B</a>
+<a class="sourceLine" id="cb129-9" title="9">{</a>
+<a class="sourceLine" id="cb129-10" title="10">    <span class="kw">constexpr</span> <span class="at">static</span> <span class="dt">int</span> type = <span class="dv">0</span> ;</a>
+<a class="sourceLine" id="cb129-11" title="11">} ;</a></code></pre></div>
+<p>C++では、この問題を解決するために、依存名はデフォルトで値ということにしている。そのため型テンプレート仮引数<code>T</code>に対して以下のようなコードがある場合、</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb130-1" title="1">T::type * x ;</a></code></pre></div>
+<p>これは「<code>T::type</code>という値と<code>x</code>という値に対して二項演算子operator *の適用した式文」という意味になる。</p>
+<p>これは非型テンプレート仮引数でも同じだ。</p>
+<div class="sourceCode" id="cb131"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb131-1" title="1"><span class="kw">template</span> &lt; <span class="dt">int</span> N &gt;</a>
+<a class="sourceLine" id="cb131-2" title="2"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb131-3" title="3">{ <span class="kw">using</span> type = <span class="dt">int</span> ; } ;</a>
+<a class="sourceLine" id="cb131-4" title="4"></a>
+<a class="sourceLine" id="cb131-5" title="5"><span class="kw">template</span> &lt; <span class="dt">int</span> N &gt;</a>
+<a class="sourceLine" id="cb131-6" title="6"><span class="dt">void</span> f()</a>
+<a class="sourceLine" id="cb131-7" title="7">{</a>
+<a class="sourceLine" id="cb131-8" title="8">    S&lt;N&gt;::type x ;</a>
+<a class="sourceLine" id="cb131-9" title="9">}</a></code></pre></div>
+<p>以下のようなコードは一見すると<code>S&lt;N&gt;::type</code>は型であることが明らかだと思うかも知れない。しかしテンプレートは明示的特殊化や部分的特殊化ができるので、いかのような明示的特殊化が後から追加されるかも知れない。</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb132-1" title="1"><span class="kw">template</span> &lt; &gt;</a>
+<a class="sourceLine" id="cb132-2" title="2"><span class="kw">struct</span> S&lt;<span class="dv">0</span>&gt;</a>
+<a class="sourceLine" id="cb132-3" title="3">{</a>
+<a class="sourceLine" id="cb132-4" title="4">    <span class="kw">constexpr</span> <span class="at">static</span> <span class="dt">int</span> type = <span class="dv">0</span> ;</a>
+<a class="sourceLine" id="cb132-5" title="5">} ;</a></code></pre></div>
+<p>テンプレートの宣言時に、依存名は名前検索されない。依存名は単に型か値かを判断されることしかしない。<code>S&lt;N&gt;::type</code>は依存名なので、宣言時に名前検索されず、テンプレートが実体化されたときに初めて名前検索される。</p>
+<p>依存名を型として解釈してほしい場合、明示的にtypenameキーワードを依存名の前に書かなければならない。</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb133-1" title="1"><span class="kw">typename</span> T::type * x ;</a></code></pre></div>
+<p>これは「<code>T::type</code>という型へのポインター型の変数xの宣言文」という意味になる。</p>
+<p>そのため、C++17では型として解釈してほしい依存名にはすべてtypenameキーワードをつける必要があった。</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb134-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb134-2" title="2"><span class="kw">typename</span> <span class="bu">std::</span>add_pointer&lt; <span class="kw">typename</span> T::type &gt;::type f() ;</a></code></pre></div>
+<p>上記のコードのふたつのtypenameは一見冗長に見えるが、どちらも文法上必要だ。なぜならば<code>T::type</code>は依存名なので型であることを明示するためにtypenameキーワードが必要だし、<code>add_ponter&lt;テンプレート実引数&gt;::type</code>はテンプレート実引数である<code>T::type</code>が依存名なので、同じく依存名になり、型であることを明示するためにtypenameキーワードが必要になる。</p>
+<p>C++17では、基本クラスとメンバー初期化子に限って、依存名でも型とみなす例外的なルールがあった。</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb135-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb135-2" title="2"><span class="kw">struct</span> S : T::type <span class="co">// 型とみなす</span></a>
+<a class="sourceLine" id="cb135-3" title="3">{</a>
+<a class="sourceLine" id="cb135-4" title="4">    <span class="co">// 型とみなす</span></a>
+<a class="sourceLine" id="cb135-5" title="5">    S() : T::type()</a>
+<a class="sourceLine" id="cb135-6" title="6">    { }</a>
+<a class="sourceLine" id="cb135-7" title="7">} ;</a></code></pre></div>
+<p>これはその文脈では型しか書けないためだ。</p>
+<p>しかし、C++には他にも文脈上、型しか書けない箇所が多数存在する。上の<code>std::add_pointer</code>の例にしてもそうだ。<code>std::add_pointer</code>はすでに宣言されていて、第一テンプレート仮引数は型テンプレート仮引数であることが明らかになっている。とすれば、<code>add_pointer</code>に対する実引数は、それが何であれ、文脈上は型以外にありえない。</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb136-1" title="1"><span class="co">// エラー、文法上ありえない</span></a>
+<a class="sourceLine" id="cb136-2" title="2"><span class="co">// is_pointerの第一テンプレート仮引数は型テンプレート仮引数</span></a>
+<a class="sourceLine" id="cb136-3" title="3"><span class="bu">std::</span>is_pointer&lt;<span class="dv">123</span>&gt;::type</a></code></pre></div>
+<p><code>is_pointer&lt;...&gt;::type</code>が書かれている場所は、関数の戻り値の型を書くべき文法上の場所である。ここに値を書くことはありえない。</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb137-1" title="1"><span class="co">// エラー、文法上ありえない</span></a>
+<a class="sourceLine" id="cb137-2" title="2"><span class="co">// 関数の戻り値の型を書くべき場所に値を書くことはできない</span></a>
+<a class="sourceLine" id="cb137-3" title="3"><span class="dv">123</span> f() ;</a></code></pre></div>
+<p>C++20では、文脈上型しか書けない場所に書かれた依存名は型であるとみなすという大幅な制限緩和が行われた。</p>
+<h3 id="typenameを明示的に書かなくてもよい文脈">typenameを明示的に書かなくてもよい文脈</h3>
+<p>C++20では基本クラスとメンバー初期化子に加えて、以下の文脈では依存名を型だとみなすようになった。型だとみなす文脈では明示的にtypenameキーワードを書く必要はない。従来どおり書いてもよい。</p>
+<h4 id="new">new</h4>
+<div class="sourceCode" id="cb138"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb138-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb138-2" title="2"><span class="dt">void</span> f()</a>
+<a class="sourceLine" id="cb138-3" title="3">{</a>
+<a class="sourceLine" id="cb138-4" title="4">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb138-5" title="5">    <span class="kw">new</span> T::type ;</a>
+<a class="sourceLine" id="cb138-6" title="6">}</a></code></pre></div>
+<h4 id="エイリアス宣言">エイリアス宣言</h4>
+<div class="sourceCode" id="cb139"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb139-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb139-2" title="2"><span class="dt">void</span> f()</a>
+<a class="sourceLine" id="cb139-3" title="3">{</a>
+<a class="sourceLine" id="cb139-4" title="4">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb139-5" title="5">    <span class="kw">using</span> type = T::type ;</a>
+<a class="sourceLine" id="cb139-6" title="6">}</a></code></pre></div>
+<h4 id="戻り値の型の後置">戻り値の型の後置</h4>
+<div class="sourceCode" id="cb140"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb140-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb140-2" title="2">            <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb140-3" title="3"><span class="kw">auto</span> f() -&gt; T::type ;</a></code></pre></div>
+<h4 id="テンプレート型仮引数のデフォルト実引数">テンプレート型仮引数のデフォルト実引数</h4>
+<div class="sourceCode" id="cb141"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb141-1" title="1">                       <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb141-2" title="2"><span class="kw">template</span> &lt; <span class="kw">typename</span> T, <span class="kw">typename</span> U = T::type &gt;</a>
+<a class="sourceLine" id="cb141-3" title="3"><span class="dt">void</span> f() ;</a></code></pre></div>
+<h4 id="static_castconst_castreinterpret_castdynamic_cast">static_cast/const_cast/reinterpret_cast/dynamic_cast</h4>
+<div class="sourceCode" id="cb142"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb142-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb142-2" title="2"><span class="dt">void</span> f()</a>
+<a class="sourceLine" id="cb142-3" title="3">{</a>
+<a class="sourceLine" id="cb142-4" title="4">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb142-5" title="5">    <span class="kw">static_cast</span>&lt;T::type&gt;(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb142-6" title="6">    <span class="kw">const_cast</span>&lt;T::type&gt;(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb142-7" title="7">    <span class="kw">reinterpret_cast</span>&lt;T::type&gt;(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb142-8" title="8">    <span class="kw">dynamic_cast</span>&lt;T::type&gt;(<span class="dv">0</span>) ;</a>
+<a class="sourceLine" id="cb142-9" title="9">}</a></code></pre></div>
+<h4 id="名前空間スコープにおける単純宣言と関数定義">名前空間スコープにおける単純宣言と関数定義</h4>
+<div class="sourceCode" id="cb143"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb143-1" title="1"><span class="co">// グローバル名前空間スコープ</span></a>
+<a class="sourceLine" id="cb143-2" title="2"></a>
+<a class="sourceLine" id="cb143-3" title="3"><span class="co">// 単純宣言</span></a>
+<a class="sourceLine" id="cb143-4" title="4"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb143-5" title="5"><span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb143-6" title="6">T::type variable ;</a>
+<a class="sourceLine" id="cb143-7" title="7"></a>
+<a class="sourceLine" id="cb143-8" title="8"><span class="co">// 関数定義</span></a>
+<a class="sourceLine" id="cb143-9" title="9"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb143-10" title="10"><span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb143-11" title="11">T::type f() { }</a></code></pre></div>
+<p>「関数定義」に注意。関数宣言は型だとみなす文脈ではない。そもそも、文法が曖昧になり変数宣言になるので、typenameキーワードを使わずに依存名を使ったまま関数宣言を書くことはできない。</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb144-1" title="1"><span class="co">// T::type型で初期化子が(T::type)である変数fの宣言</span></a>
+<a class="sourceLine" id="cb144-2" title="2"><span class="kw">template</span> &lt; <span class="kw">template</span> T &gt;</a>
+<a class="sourceLine" id="cb144-3" title="3">T::type f( T::type ) ;</a></code></pre></div>
+<p>これは変数の宣言だ。関数の宣言を書くには、typenameキーワードを使って明示的に依存名を型であると明示する必要がある。</p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb145-1" title="1"><span class="co">// T::type型を仮引数にとりT::type型を戻り値の型とする関数fの宣言</span></a>
+<a class="sourceLine" id="cb145-2" title="2"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb145-3" title="3"><span class="kw">typename</span> T::type f( <span class="kw">typename</span> T::type ) ;</a></code></pre></div>
+<h4 id="メンバー宣言">メンバー宣言</h4>
+<div class="sourceCode" id="cb146"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb146-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb146-2" title="2"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb146-3" title="3">{</a>
+<a class="sourceLine" id="cb146-4" title="4">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb146-5" title="5">    T::type member ;</a>
+<a class="sourceLine" id="cb146-6" title="6">} ;</a></code></pre></div>
+<h4 id="メンバー宣言の中の仮引数宣言">メンバー宣言の中の仮引数宣言</h4>
+<p>メンバー宣言、つまりメンバー関数の宣言の中の仮引数宣言は型であるとみなされる。</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb147-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb147-2" title="2"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb147-3" title="3">{</a>
+<a class="sourceLine" id="cb147-4" title="4">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb147-5" title="5">    <span class="dt">void</span> f( T::type ) ;</a>
+<a class="sourceLine" id="cb147-6" title="6">} ;</a></code></pre></div>
+<p>これはメンバー宣言だけだ。名前空間スコープの中の関数の宣言では文脈上型にはならない。すでに説明したように、変数宣言として扱われる。</p>
+<p>もう一つ例外的なルールがある。メンバー宣言の中のデフォルト実引数の中の仮引数宣言では型であるとはみなされない。これはデフォルト実引数の中にラムダ式を書き、そのラムダ式の本体の中に依存名を使った場合が当てはまる。</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb148-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb148-2" title="2"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb148-3" title="3">{</a>
+<a class="sourceLine" id="cb148-4" title="4">    <span class="co">// エラー、ラムダ式の中のT::typeは値とみなす</span></a>
+<a class="sourceLine" id="cb148-5" title="5">    <span class="dt">void</span> f( T::type x = []( T::type x ){ <span class="cf">return</span> T::type{} ; }( T::type{} ) ) ;</a>
+<a class="sourceLine" id="cb148-6" title="6">} ;</a></code></pre></div>
+<p>正しくは以下のようにtypenameキーワードを使って型であると明示しなければならない</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb149-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb149-2" title="2"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb149-3" title="3">{</a>
+<a class="sourceLine" id="cb149-4" title="4">    <span class="co">// このT::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb149-5" title="5">    <span class="dt">void</span> f( T::type x =</a>
+<a class="sourceLine" id="cb149-6" title="6">        <span class="co">// このT::typeはデフォルトで値とみなされるのでtypenameキーワードが必要</span></a>
+<a class="sourceLine" id="cb149-7" title="7">        []( <span class="kw">typename</span> T::type x ){ <span class="cf">return</span> <span class="kw">typename</span> T::type{} ; }( <span class="kw">typename</span> T::type{} ) ) ;</a>
+<a class="sourceLine" id="cb149-8" title="8">} ;</a></code></pre></div>
+<h4 id="関数名が修飾名の関数宣言の仮引数宣言">関数名が修飾名の関数宣言の仮引数宣言</h4>
+<p>関数名が修飾名の場合の関数宣言の仮引数宣言では、依存名は型とみなされる。</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb150-1" title="1"><span class="kw">namespace</span> NS {</a>
+<a class="sourceLine" id="cb150-2" title="2">    <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb150-3" title="3">    <span class="co">// typenameキーワードが必要</span></a>
+<a class="sourceLine" id="cb150-4" title="4">    <span class="dt">void</span> f( <span class="kw">typename</span> T::type ) ;</a>
+<a class="sourceLine" id="cb150-5" title="5">}</a>
+<a class="sourceLine" id="cb150-6" title="6"></a>
+<a class="sourceLine" id="cb150-7" title="7"><span class="co">// 上のNS::fの再宣言</span></a>
+<a class="sourceLine" id="cb150-8" title="8"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb150-9" title="9"><span class="co">// typenameキーワードは必要ない</span></a>
+<a class="sourceLine" id="cb150-10" title="10"><span class="dt">void</span> NS::f( T::type ) ;</a></code></pre></div>
+<p>この場合も、デフォルト実引数の中の仮引数宣言では依存名は型だとみなされない。</p>
+<h4 id="ラムダ式の仮引数宣言">ラムダ式の仮引数宣言</h4>
+<div class="sourceCode" id="cb151"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb151-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb151-2" title="2">{</a>
+<a class="sourceLine" id="cb151-3" title="3">    <span class="co">// OK、T::typeは型とみなす</span></a>
+<a class="sourceLine" id="cb151-4" title="4">    []&lt; <span class="kw">typename</span> T &gt;( T::type x ){ <span class="cf">return</span> x ; } ;</a>
+<a class="sourceLine" id="cb151-5" title="5">}</a></code></pre></div>
+<p>この場合も、デフォルト実引数の中の仮引数宣言では依存名は型だとみなされない。</p>
+<h2 id="ラムダキャプチャーの中のパック展開">ラムダキャプチャーの中のパック展開</h2>
+<p>ラムダキャプチャーはパラメーターパックをパック展開しながらキャプチャーできるようになった。</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb152-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;</a>
+<a class="sourceLine" id="cb152-2" title="2"><span class="dt">void</span> take_all( Types &amp;&amp;  ... ) { }</a>
+<a class="sourceLine" id="cb152-3" title="3"></a>
+<a class="sourceLine" id="cb152-4" title="4"><span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;</a>
+<a class="sourceLine" id="cb152-5" title="5"><span class="dt">void</span> f( Types &amp;&amp; ... args )</a>
+<a class="sourceLine" id="cb152-6" title="6">{</a>
+<a class="sourceLine" id="cb152-7" title="7">    [ args...]{ take_all( args... ) ;} ;</a>
+<a class="sourceLine" id="cb152-8" title="8">}</a></code></pre></div>
+<h3 id="単純キャプチャー">単純キャプチャー</h3>
+<p>単純キャプチャーの場合は、キャプチャーの直後に<code>...</code>を書く。</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb153-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;</a>
+<a class="sourceLine" id="cb153-2" title="2"><span class="dt">void</span> f( Types &amp;&amp;* ... pack )</a>
+<a class="sourceLine" id="cb153-3" title="3">{</a>
+<a class="sourceLine" id="cb153-4" title="4">    <span class="co">// コピーキャプチャー</span></a>
+<a class="sourceLine" id="cb153-5" title="5">    [pack...]{} ;</a>
+<a class="sourceLine" id="cb153-6" title="6">    <span class="co">// リファレンスキャプチャー</span></a>
+<a class="sourceLine" id="cb153-7" title="7">    [&amp;pack...{} ;]</a>
+<a class="sourceLine" id="cb153-8" title="8">}</a></code></pre></div>
+<h3 id="初期化キャプチャー">初期化キャプチャー</h3>
+<p>初期化キャプチャーの場合は、キャプチャーの直前に`…’を書く。</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb154-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;</a>
+<a class="sourceLine" id="cb154-2" title="2"><span class="dt">void</span> f( Types &amp;&amp; ... pack )</a>
+<a class="sourceLine" id="cb154-3" title="3">{</a>
+<a class="sourceLine" id="cb154-4" title="4">    <span class="co">// 初期化キャプチャーによるコピー</span></a>
+<a class="sourceLine" id="cb154-5" title="5">    [...values = pack ]{} ;</a>
+<a class="sourceLine" id="cb154-6" title="6">    <span class="co">// 初期化キャプチャーによるムーブ</span></a>
+<a class="sourceLine" id="cb154-7" title="7">    <span class="co">//</span></a>
+<a class="sourceLine" id="cb154-8" title="8">    [...values = <span class="bu">std::</span>move(pack){} ;</a>
+<a class="sourceLine" id="cb154-9" title="9">}</a></code></pre></div>
+<h2 id="likelyとunlikely">[[likely]]と[[unlikely]]</h2>
+<p>C++20では新しい属性として、<code>[[likely]]</code>と<code>[[unlikely]]</code>が追加された。この属性はラベルもしくは文に記述する。</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb155-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb155-2" title="2">{</a>
+<a class="sourceLine" id="cb155-3" title="3"><span class="co">// 式文の例</span></a>
+<a class="sourceLine" id="cb155-4" title="4">[[<span class="at">likely</span>]] do_something() ;</a>
+<a class="sourceLine" id="cb155-5" title="5"><span class="co">// ブロック文の例</span></a>
+<a class="sourceLine" id="cb155-6" title="6">[[<span class="at">unlikely</span>]] { do_something() ; } ;</a>
+<a class="sourceLine" id="cb155-7" title="7"></a>
+<a class="sourceLine" id="cb155-8" title="8"><span class="co">// ラベル文の例</span></a>
+<a class="sourceLine" id="cb155-9" title="9">    <span class="cf">goto</span> likely_label ;</a>
+<a class="sourceLine" id="cb155-10" title="10"></a>
+<a class="sourceLine" id="cb155-11" title="11">[[<span class="at">likely</span>]] likely_label : do_something() ;</a>
+<a class="sourceLine" id="cb155-12" title="12">}</a></code></pre></div>
+<p>likelyとunlikelyを同時に書くことはできない。</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb156-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb156-2" title="2">{</a>
+<a class="sourceLine" id="cb156-3" title="3"><span class="co">// エラー</span></a>
+<a class="sourceLine" id="cb156-4" title="4">[[<span class="at">likely</span>,<span class="at"> unlikely</span>]] do_something() ;</a>
+<a class="sourceLine" id="cb156-5" title="5">}</a></code></pre></div>
+<p>likely属性が指定された文を含む実行パスは、実行される可能性が高い(likely)ことを意味する。unlikely属性が指定された文を含む実行パスは、実行される可能性が低い(unlikely)ことを意味する。コンパイラーはこの情報をコード生成の際の最適化に利用できる。</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb157-1" title="1"><span class="co">// 現在の状態が正常かどうか調べる関数</span></a>
+<a class="sourceLine" id="cb157-2" title="2"><span class="co">// 通常はtrueを返す</span></a>
+<a class="sourceLine" id="cb157-3" title="3"><span class="dt">bool</span> sanity_check() ;</a>
+<a class="sourceLine" id="cb157-4" title="4"></a>
+<a class="sourceLine" id="cb157-5" title="5"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb157-6" title="6">{</a>
+<a class="sourceLine" id="cb157-7" title="7">    <span class="cf">while</span> (<span class="kw">true</span>)</a>
+<a class="sourceLine" id="cb157-8" title="8">    {</a>
+<a class="sourceLine" id="cb157-9" title="9">        <span class="co">// 状態が正常でなければabort</span></a>
+<a class="sourceLine" id="cb157-10" title="10">        <span class="cf">if</span> ( !sanity_check() )</a>
+<a class="sourceLine" id="cb157-11" title="11">            [[<span class="at">unlikely</span>]] <span class="bu">std::</span>abort() ;</a>
+<a class="sourceLine" id="cb157-12" title="12"></a>
+<a class="sourceLine" id="cb157-13" title="13">        <span class="co">// 正常なので次の処理をする</span></a>
+<a class="sourceLine" id="cb157-14" title="14">        do_next_work() ;</a>
+<a class="sourceLine" id="cb157-15" title="15">    }</a>
+<a class="sourceLine" id="cb157-16" title="16">}</a></code></pre></div>
+<p>このコードは、ループを回して何らかの処理を行うプログラムだ。現在の状態が正常かどうかを処理ごとに確認し、正常でない場合はただちにabortする。正常でない状態は通常は起こりえないことが期待できる場合は、このようにコンパイラーにヒントを与えることができる。</p>
+<p>この場合はひとつの式文に適用しているが、よくあるコードとしては、ブロック文に適用するものだろう。</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb158-1" title="1"><span class="co">// 現在の状態が正常かどうか調べる関数</span></a>
+<a class="sourceLine" id="cb158-2" title="2"><span class="co">// 通常はtrueを返す</span></a>
+<a class="sourceLine" id="cb158-3" title="3"><span class="dt">bool</span> sanity_check() ;</a>
+<a class="sourceLine" id="cb158-4" title="4"></a>
+<a class="sourceLine" id="cb158-5" title="5"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb158-6" title="6">{</a>
+<a class="sourceLine" id="cb158-7" title="7">    <span class="cf">while</span> (<span class="kw">true</span>)</a>
+<a class="sourceLine" id="cb158-8" title="8">    {</a>
+<a class="sourceLine" id="cb158-9" title="9">        <span class="co">// 状態が正常でなければabort</span></a>
+<a class="sourceLine" id="cb158-10" title="10">        <span class="cf">if</span> ( !sanity_check() ) [[<span class="at">unlikely</span>]] {</a>
+<a class="sourceLine" id="cb158-11" title="11">            <span class="co">// 終了処理</span></a>
+<a class="sourceLine" id="cb158-12" title="12">            cleanup() ;</a>
+<a class="sourceLine" id="cb158-13" title="13">            <span class="co">// 強制終了</span></a>
+<a class="sourceLine" id="cb158-14" title="14">            <span class="bu">std::</span>abort() ;</a>
+<a class="sourceLine" id="cb158-15" title="15">        }</a>
+<a class="sourceLine" id="cb158-16" title="16"></a>
+<a class="sourceLine" id="cb158-17" title="17">        <span class="co">// 正常なので次の処理をする</span></a>
+<a class="sourceLine" id="cb158-18" title="18">        do_next_work() ;</a>
+<a class="sourceLine" id="cb158-19" title="19">    }</a>
+<a class="sourceLine" id="cb158-20" title="20">}</a></code></pre></div>
+<p>コンパイラーがどのような最適化をするかはアーキテクチャーごとに異なる。例えば、条件分岐命令自体に実行する可能性の高いブランチを指定する機能がついているアーキテクチャーが存在する。あるいは、実行されやすいコードを局所的に固めて配置したり、実行されにくいコードを離して配置することにより、プロセッサーのキャッシュに乗りやすくするコード生成などが考えられる。この情報をどのように買うかはコンパイラーの実装次第であり、過剰に利用するとむしろパフォーマンスを下げることにもなる。</p>
+<h2 id="非型テンプレート仮引数の制限緩和">非型テンプレート仮引数の制限緩和</h2>
+<p>C++20では非型テンプレート仮引数の実引数として浮動小数点数型やクラス型を渡せるようになった。</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb159-1" title="1"><span class="kw">template</span> &lt; <span class="kw">auto</span> value &gt;</a>
+<a class="sourceLine" id="cb159-2" title="2"><span class="kw">struct</span> A { } ;</a>
+<a class="sourceLine" id="cb159-3" title="3"></a>
+<a class="sourceLine" id="cb159-4" title="4"><span class="kw">struct</span> B { } ;</a>
+<a class="sourceLine" id="cb159-5" title="5"></a>
+<a class="sourceLine" id="cb159-6" title="6"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb159-7" title="7">{</a>
+<a class="sourceLine" id="cb159-8" title="8">    A&lt;<span class="fl">1.0</span>&gt; a1 ;</a>
+<a class="sourceLine" id="cb159-9" title="9">    A&lt;B{}&gt; a2 ;</a>
+<a class="sourceLine" id="cb159-10" title="10">}</a></code></pre></div>
+<p>クラス型であればどのようなクラスでも渡せるわけではない。テンプレート仮引数はテンプレートの同一性を比較できる必要があるため、強い制約がある。</p>
+<h3 id="非型テンプレート仮引数の型">非型テンプレート仮引数の型</h3>
+<p>非型テンプレート仮引数には、大きく分けて3種類の型を使うことができる。</p>
+<ul>
+<li>構造型(structual type)</li>
+<li>placeholder型を含む型</li>
+<li>推定されるクラス型のプレイスホルダー</li>
+</ul>
+<p>構造型(structual type)については後述する。</p>
+<p>このうち、placeholder型というのはC++17で非型テンプレート仮引数にも使えるようになった機能で、<code>auto</code>と<code>decltype(auto)</code>のことだ。</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb160-1" title="1"><span class="kw">template</span> &lt; <span class="kw">auto</span> value &gt;</a>
+<a class="sourceLine" id="cb160-2" title="2"><span class="kw">struct</span> A { } ;</a>
+<a class="sourceLine" id="cb160-3" title="3"><span class="kw">template</span> &lt; <span class="kw">decltype</span>(<span class="kw">auto</span>) value &gt;</a>
+<a class="sourceLine" id="cb160-4" title="4"><span class="kw">struct</span> B { } ;</a>
+<a class="sourceLine" id="cb160-5" title="5"></a>
+<a class="sourceLine" id="cb160-6" title="6"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb160-7" title="7">{</a>
+<a class="sourceLine" id="cb160-8" title="8">    <span class="co">// valueの型はint</span></a>
+<a class="sourceLine" id="cb160-9" title="9">    A&lt;<span class="dv">123</span>&gt; a ;</a>
+<a class="sourceLine" id="cb160-10" title="10">    <span class="co">// valueの型はint</span></a>
+<a class="sourceLine" id="cb160-11" title="11">    B&lt;<span class="dv">123</span>&gt; b ;</a>
+<a class="sourceLine" id="cb160-12" title="12">}</a></code></pre></div>
+<p>placeholder型を含む型というのは、例えばCV修飾子やリファレンス修飾子を使えるということだ。</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb161-1" title="1"><span class="kw">template</span> &lt; <span class="at">const</span> <span class="kw">auto</span> &amp; value &gt;</a>
+<a class="sourceLine" id="cb161-2" title="2"><span class="kw">struct</span> A { } ;</a></code></pre></div>
+<p><code>auto</code>と<code>decltype(auto)</code>の違いを簡単に説明すると、<code>auto</code>はテンプレート実引数推定のルールにしたがって型を推定するのに対し、<code>decltype(auto)</code>は初期化子の式をdecltypeの中に書いたかのように振る舞う。</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb162-1" title="1"><span class="kw">auto</span> x = expr ;</a></code></pre></div>
+<p>この変数xの型は、あたかも、</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb163-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb163-2" title="2"><span class="dt">void</span> f( T ) ;</a>
+<a class="sourceLine" id="cb163-3" title="3"></a>
+<a class="sourceLine" id="cb163-4" title="4">f( expr ) ;</a></code></pre></div>
+<p>としたときのテンプレート仮引数Tと同じ型になる。</p>
+<p>一方、<code>decltype(auto)</code>の場合、</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb164-1" title="1"><span class="kw">decltype</span>(<span class="kw">auto</span>) x = expr ;</a></code></pre></div>
+<p>これは<code>auto</code>部分を<code>expr</code>で置き換えたかのように振る舞う。つまり、以下のコードと同じ意味になる。</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb165-1" title="1"><span class="kw">decltype</span>(expr) x = expr ;</a></code></pre></div>
+<p>推定されるクラス型のプレイスホルダーというのは、クラスのコンストラクターからのテンプレート実引数推定のことだ。</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb166-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb166-2" title="2"><span class="kw">struct</span> A { } ;</a>
+<a class="sourceLine" id="cb166-3" title="3"></a>
+<a class="sourceLine" id="cb166-4" title="4"><span class="co">// 推定されるクラス型のプレイスホルダーA</span></a>
+<a class="sourceLine" id="cb166-5" title="5"><span class="kw">template</span> &lt; A a &gt;</a>
+<a class="sourceLine" id="cb166-6" title="6"><span class="kw">struct</span> B { } ;</a>
+<a class="sourceLine" id="cb166-7" title="7"></a>
+<a class="sourceLine" id="cb166-8" title="8"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb166-9" title="9">{</a>
+<a class="sourceLine" id="cb166-10" title="10">    <span class="co">// コンストラクターからA&lt;int&gt;が推定される</span></a>
+<a class="sourceLine" id="cb166-11" title="11">    B&lt; A&lt;<span class="dt">int</span>&gt;{} &gt; b ;</a>
+<a class="sourceLine" id="cb166-12" title="12">}</a></code></pre></div>
+<h4 id="構造型structural-type">構造型(structural type)</h4>
+<p>C++17までは、非型テンプレート仮引数の値の型は整数型、ポインター型、lvalueリファレンス型しか許されていなかった。C++20ではこの制限が大幅に緩和された。非型テンプレート仮引数の値には構造型(structural type)を渡せる。</p>
+<p>構造型(structural type)とは以下のように定義される。</p>
+<ul>
+<li>スカラー型</li>
+<li>lvalueリファレンス型</li>
+<li>リテラルクラス型かつ以下の特性を持つもの
+<ul>
+<li>すべての基本クラスと非staticデータメンバーはpublicでmutableではない</li>
+<li>すべての基本クラスと非staticデータメンバーは構造型もしくはその配列（多次元配列も可）である。</li>
+</ul></li>
+</ul>
+<h4 id="スカラー型">スカラー型</h4>
+<p>スカラー型(scalar types)とは、演算型(arithmetic types)、enum型、ポインター型、メンバーへのポインター型、std::nullptr_t型、それらの型のCV修飾版の型のことだ。</p>
+<p>演算型とは整数型と浮動小数点数型のことだ。</p>
+<p>C++20ではスカラー型がすべて非型テンプレート仮引数の値の型として使えるようになったので、浮動小数点数を使うことができる。</p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb167-1" title="1"><span class="kw">template</span> &lt; <span class="dt">double</span> value &gt;</a>
+<a class="sourceLine" id="cb167-2" title="2"><span class="kw">struct</span> S { } ;</a>
+<a class="sourceLine" id="cb167-3" title="3"></a>
+<a class="sourceLine" id="cb167-4" title="4"><span class="co">// OK</span></a>
+<a class="sourceLine" id="cb167-5" title="5"><span class="kw">using</span> type = S&lt;<span class="fl">1.0</span>&gt; ;</a></code></pre></div>
+<h4 id="lvalueリファレンス型">lvalueリファレンス型</h4>
+<p>非型テンプレート仮引数の値がlvalueリファレンス型のとき、実引数として取れるのはstaticストレージ上に構築された値だ。</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb168-1" title="1"><span class="kw">template</span> &lt; <span class="dt">int</span> &amp; ref &gt;</a>
+<a class="sourceLine" id="cb168-2" title="2"><span class="kw">struct</span> S {  } ;</a>
+<a class="sourceLine" id="cb168-3" title="3"></a>
+<a class="sourceLine" id="cb168-4" title="4"><span class="co">// 名前空間スコープの変数はstaticストレージ上に構築される</span></a>
+<a class="sourceLine" id="cb168-5" title="5"><span class="dt">int</span> static_storage { } ;</a>
+<a class="sourceLine" id="cb168-6" title="6"></a>
+<a class="sourceLine" id="cb168-7" title="7"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb168-8" title="8">{</a>
+<a class="sourceLine" id="cb168-9" title="9">    <span class="co">// 関数のローカル変数はautomatic storage上に構築される</span></a>
+<a class="sourceLine" id="cb168-10" title="10">    <span class="dt">int</span> automatic_storage{} ;</a>
+<a class="sourceLine" id="cb168-11" title="11">    <span class="co">// エラー</span></a>
+<a class="sourceLine" id="cb168-12" title="12">    S&lt; automatic_storage &gt; s1{} ;</a>
+<a class="sourceLine" id="cb168-13" title="13"></a>
+<a class="sourceLine" id="cb168-14" title="14"></a>
+<a class="sourceLine" id="cb168-15" title="15">    <span class="co">// OK    </span></a>
+<a class="sourceLine" id="cb168-16" title="16">    S&lt; static_storage &gt; s2 { } ;</a>
+<a class="sourceLine" id="cb168-17" title="17">    <span class="co">// static指定子つきのローカル変数はstaticストレージ上に構築される</span></a>
+<a class="sourceLine" id="cb168-18" title="18">    <span class="at">static</span> <span class="dt">int</span> static_locale_storage{} ;</a>
+<a class="sourceLine" id="cb168-19" title="19">    <span class="co">// OK</span></a>
+<a class="sourceLine" id="cb168-20" title="20">    S&lt; static_local_storage &gt; s3{} ;</a>
+<a class="sourceLine" id="cb168-21" title="21">}</a></code></pre></div>
+<h4 id="条件付きリテラルクラス型">条件付きリテラルクラス型</h4>
+<p>以下のような条件のリテラルクラス型は非型テンプレート仮引数の値にできる。</p>
+<ul>
+<li>リテラルクラス型かつ以下の特性を持つもの
+<ul>
+<li>すべての基本クラスと非staticデータメンバーはpubliでmutableではない</li>
+<li>すべての基本クラスと非staticデータメンバーは構造型もしくはその配列（多次元配列も可）である。</li>
+</ul></li>
+</ul>
+<p>リテラルクラス型は以下のように定義されている。</p>
+<ul>
+<li>CV修飾されているものを含むクラス型で、以下のすべての特性を持つもの
+<ul>
+<li>constexprデストラクターを持つ</li>
+<li>クロージャー型、もしくはアグリゲート型、もしくは少なくとも1つのconstexprコンストラクターかコンストラクターテンプレート（基本クラスから継承したものでもよい）でコピー、ムーブコンストラクターではないもの</li>
+<li>union型である場合、非staticメンバーのうちの少なくとも1つは非volatileリテラル型であること</li>
+<li>union型ではない場合、すべての非staticデータメンバーと基本クラスは非volatileリテラル型であること</li>
+</ul></li>
+</ul>
+<h3 id="テンプレート実引数同一">テンプレート実引数同一</h3>
+<p>2つのテンプレートIDが同一であるかということは重要だ。</p>
+<p>型テンプレート仮引数の場合、テンプレート実引数が同じ型であれば同じテンプレートIDだ。</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb169-1" title="1">tempplate &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb169-2" title="2"><span class="kw">struct</span> S { }</a>
+<a class="sourceLine" id="cb169-3" title="3"></a>
+<a class="sourceLine" id="cb169-4" title="4"><span class="kw">using</span> T1 = S&lt;<span class="dt">int</span> *&gt; ;</a>
+<a class="sourceLine" id="cb169-5" title="5"><span class="kw">using</span> T2 = S&lt; <span class="bu">std::</span>add_pointer_t&lt;<span class="dt">int</span>&gt; &gt; ;</a>
+<a class="sourceLine" id="cb169-6" title="6"><span class="co">// true</span></a>
+<a class="sourceLine" id="cb169-7" title="7"><span class="kw">constexpr</span> <span class="dt">bool</span> b = <span class="bu">std::</span>is_same_v&lt; T1, T2 &gt; ;</a></code></pre></div>
+<p>この場合、T1とT2は同じ型になる。</p>
+<p>非型テンプレート仮引数の場合も、テンプレート実引数が同じ型で同じ値であれば同じテンプレートIDという原則は変わらない。ただし、「同じ値」ということについては、通常とは違う特別な定義されている。</p>
+<p>値がクラス型の場合、<code>operator ==</code>、<code>operator !=</code>, <code>operator &lt;=&gt;</code>は考慮されない。</p>
+<p>C++の規格は、以下のように定義している。</p>
+<p>2つの値は同じ型で以下の条件を満たす場合、テンプレート実引数同一(template-argument-equivalent)である。</p>
+<ul>
+<li>整数型で、その値が同じ</li>
+<li>浮動小数点数型で、その値は同一</li>
+<li><code>std::nullptr_t</code>型である</li>
+<li>enum型Tで、その値が同じ</li>
+<li>ポインター型で同じポインター値を持つ</li>
+<li>メンバーへのポインター型で同じクラスメンバーを指す、もしくはどちらもnullメンバーポインター値である</li>
+<li>リファレンス型で、同じオブジェクトもしくは関数を指す</li>
+<li>配列型で、対応する要素はそれぞれテンプレート実引数同一性を満たす</li>
+<li>union型で、どちらもアクティブメンバーを持たないか、同じアクティブメンバーを持ち、そのアクティブメンバーがテンプレート実引数同一を満たす</li>
+<li>クラス型で、対応するそれぞれの直接のサブオブジェクトとリファレンスメンバーがテンプレート実引数同一を満たす</li>
+</ul>
+<p>いくつか注意すべき点がある。</p>
+<p>浮動小数点数は値が同じでも同一ではない可能性がある。例えば最も普及しているIEEE 754規格の浮動小数点数の場合、<code>+0.0</code>と<code>-0.0</code>は値は同じだが同一ではない。</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb170-1" title="1"><span class="kw">template</span> &lt; <span class="kw">auto</span> &gt; struc S { } ;</a>
+<a class="sourceLine" id="cb170-2" title="2"></a>
+<a class="sourceLine" id="cb170-3" title="3"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb170-4" title="4">{</a>
+<a class="sourceLine" id="cb170-5" title="5">    <span class="co">// true</span></a>
+<a class="sourceLine" id="cb170-6" title="6">    <span class="dt">bool</span> a = (+<span class="fl">0.0</span> == -<span class="fl">0.0</span>) ;</a>
+<a class="sourceLine" id="cb170-7" title="7">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb170-8" title="8">    <span class="dt">bool</span> b = <span class="bu">std::</span>is_same_v&lt; S&lt;+<span class="fl">0.0</span>&gt;, S&lt;-<span class="fl">0.0</span>&gt; &gt; ;</a>
+<a class="sourceLine" id="cb170-9" title="9">}</a></code></pre></div>
+<p>なぜならば浮動小数点数の表現としては同一ではないからだ。</p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb171-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb171-2" title="2">{</a>
+<a class="sourceLine" id="cb171-3" title="3">    <span class="dt">double</span> a = +<span class="fl">0.0</span> ;</a>
+<a class="sourceLine" id="cb171-4" title="4">    <span class="dt">double</span> b = -<span class="fl">0.0</span> ;</a>
+<a class="sourceLine" id="cb171-5" title="5">    <span class="co">// 非ゼロ、同じバイト列ではない</span></a>
+<a class="sourceLine" id="cb171-6" title="6">    <span class="kw">auto</span> result = <span class="bu">std::</span>memcmp( &amp;a, &amp;b, <span class="kw">sizeof</span>(</a>
+<a class="sourceLine" id="cb171-7" title="7">}</a></code></pre></div>
+<p>enum型はその値で比較される。列挙子の違いは考慮されない。</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb172-1" title="1"><span class="kw">enum</span> <span class="kw">struct</span> E{ a = <span class="dv">1</span>, b = <span class="dv">1</span> } ;</a>
+<a class="sourceLine" id="cb172-2" title="2"><span class="kw">template</span> &lt; <span class="kw">auto</span> &gt; <span class="kw">struct</span> S ;</a>
+<a class="sourceLine" id="cb172-3" title="3"></a>
+<a class="sourceLine" id="cb172-4" title="4"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb172-5" title="5">{</a>
+<a class="sourceLine" id="cb172-6" title="6">    <span class="co">// true</span></a>
+<a class="sourceLine" id="cb172-7" title="7">    <span class="dt">bool</span> b = <span class="bu">std::</span>is_same_v&lt; S&lt;E::a&gt;, S&lt;E::b&gt; &gt; ;</a>
+<a class="sourceLine" id="cb172-8" title="8">}</a></code></pre></div>
+<p>リファレンスは同じオブジェクトを参照している場合に同一とみなされる。同じ値の異なるオブジェクトへの参照は同一ではない。</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb173-1" title="1"><span class="kw">template</span> &lt; <span class="dt">int</span> &amp; &gt; <span class="kw">struct</span> S { } ;</a>
+<a class="sourceLine" id="cb173-2" title="2"></a>
+<a class="sourceLine" id="cb173-3" title="3"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb173-4" title="4">{</a>
+<a class="sourceLine" id="cb173-5" title="5">    <span class="at">static</span> <span class="dt">int</span> a = <span class="dv">1</span> ;</a>
+<a class="sourceLine" id="cb173-6" title="6">    <span class="at">static</span> <span class="dt">int</span> b = <span class="dv">1</span> ;</a>
+<a class="sourceLine" id="cb173-7" title="7">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb173-8" title="8">    <span class="dt">bool</span> b = <span class="bu">std::</span>is_same_v&lt; S&lt;a&gt;, S&lt;b&gt; &gt; ;</a>
+<a class="sourceLine" id="cb173-9" title="9">}</a></code></pre></div>
+<p>非型テンプレート仮引数に配列型を使うと、それは配列の要素型へのポインター型になる。</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb174-1" title="1"><span class="co">// &lt; int * &gt;と同じ</span></a>
+<a class="sourceLine" id="cb174-2" title="2"><span class="kw">template</span> &lt; <span class="dt">int</span> A[<span class="dv">5</span>] &gt; <span class="kw">struct</span> S { } ;</a>
+<a class="sourceLine" id="cb174-3" title="3"></a>
+<a class="sourceLine" id="cb174-4" title="4"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb174-5" title="5">{</a>
+<a class="sourceLine" id="cb174-6" title="6">    <span class="at">static</span> <span class="dt">int</span> a[<span class="dv">5</span>] ;</a>
+<a class="sourceLine" id="cb174-7" title="7">    <span class="co">// S&lt; &amp;a[0] &gt;と同じ</span></a>
+<a class="sourceLine" id="cb174-8" title="8">    <span class="kw">using</span> type = S&lt;a&gt; ;</a>
+<a class="sourceLine" id="cb174-9" title="9">}</a></code></pre></div>
+<p>配列のテンプレート実引数同一は、クラスのデータメンバーとして使ったときに考慮される。</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb175-1" title="1"><span class="kw">struct</span> Array</a>
+<a class="sourceLine" id="cb175-2" title="2">{</a>
+<a class="sourceLine" id="cb175-3" title="3">    <span class="dt">int</span> data[<span class="dv">5</span>] ;</a>
+<a class="sourceLine" id="cb175-4" title="4">} ;</a>
+<a class="sourceLine" id="cb175-5" title="5"></a>
+<a class="sourceLine" id="cb175-6" title="6"><span class="kw">template</span> &lt; Array &gt; <span class="kw">struct</span> S { } ;</a>
+<a class="sourceLine" id="cb175-7" title="7"></a>
+<a class="sourceLine" id="cb175-8" title="8"><span class="kw">constexpr</span> Array a = {{<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>}} ;</a>
+<a class="sourceLine" id="cb175-9" title="9"><span class="kw">constexpr</span> Array b = {{<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>}} ;</a>
+<a class="sourceLine" id="cb175-10" title="10"><span class="kw">constexpr</span> Array c = {{<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">0</span>}} ;</a>
+<a class="sourceLine" id="cb175-11" title="11"></a>
+<a class="sourceLine" id="cb175-12" title="12"><span class="kw">using</span> A = S&lt;a&gt; ;</a>
+<a class="sourceLine" id="cb175-13" title="13"><span class="kw">using</span> B = S&lt;b&gt; ;</a>
+<a class="sourceLine" id="cb175-14" title="14"><span class="kw">using</span> C = S&lt;c&gt; ;</a></code></pre></div>
+<p>ここで、AとBは同じ型だが、CはA, Bとは違う別の型だ。</p>
 </body>
 </html>
