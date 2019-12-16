@@ -176,6 +176,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li><a href="#テンプレート実引数同一">テンプレート実引数同一</a></li>
 </ul></li>
+<li><a href="#アトミック操作のcompare-and-exchangeでパディングのある場合の挙動の変更">アトミック操作のcompare-and-exchangeでパディングのある場合の挙動の変更</a><ul>
+<li><a href="#パディング">パディング</a></li>
+<li><a href="#浮動小数点数">浮動小数点数</a></li>
+<li><a href="#c20での変更">C++20での変更</a></li>
+</ul></li>
+<li><a href="#destroying-operator-delete">destroying operator delete</a><ul>
+<li><a href="#応用">応用</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -1861,5 +1869,190 @@ F( 0 ) </code></pre>
 <a class="sourceLine" id="cb175-13" title="13"><span class="kw">using</span> B = S&lt;b&gt; ;</a>
 <a class="sourceLine" id="cb175-14" title="14"><span class="kw">using</span> C = S&lt;c&gt; ;</a></code></pre></div>
 <p>ここで、AとBは同じ型だが、CはA, Bとは違う別の型だ。</p>
+<h2 id="アトミック操作のcompare-and-exchangeでパディングのある場合の挙動の変更">アトミック操作のcompare-and-exchangeでパディングのある場合の挙動の変更</h2>
+<p>アトミック操作ライブラリにはcompare-and-exchangeという操作がある。この関数にはフリー関数版とメンバー関数版と、さらにstrong/weakとメモリーオーダーを実引数に取るオーバーロード関数が多数あるが、問題を簡単にするため、アトミック操作のことはまず考えず、以下のような形を考える。</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb176-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb176-2" title="2"><span class="dt">bool</span> compre_exchange( T &amp; current, T &amp; expected, T desired ) ;</a></code></pre></div>
+<p>compare_exchangeは以下のような挙動をする。</p>
+<ul>
+<li>currentとexpectedを比較し、等しければcurrentの値をdesiredにする</li>
+<li>そうでない場合、expectedの値をcurrentにする</li>
+<li>戻り値は比較の結果</li>
+</ul>
+<p>コードで書くと以下のような形になる。</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb177-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb177-2" title="2"><span class="dt">bool</span> compre_exchange( T &amp; current, T &amp; expected, T desired )</a>
+<a class="sourceLine" id="cb177-3" title="3">{</a>
+<a class="sourceLine" id="cb177-4" title="4">    <span class="dt">bool</span> result = ( current == expected ) ;</a>
+<a class="sourceLine" id="cb177-5" title="5">    <span class="cf">if</span> ( result )</a>
+<a class="sourceLine" id="cb177-6" title="6">        current = desired ;</a>
+<a class="sourceLine" id="cb177-7" title="7">    <span class="cf">else</span></a>
+<a class="sourceLine" id="cb177-8" title="8">        expected = current ;</a>
+<a class="sourceLine" id="cb177-9" title="9"></a>
+<a class="sourceLine" id="cb177-10" title="10">    <span class="cf">return</span> result ;</a>
+<a class="sourceLine" id="cb177-11" title="11">}</a></code></pre></div>
+<p>このような一連の操作をアトミックに行うのがcompare-and-exchangeだ。この操作はアトミックに行えると、排他的制御のためのスピンロックやロックフリーデータ構造を作るための操作など様々な実装に応用できる。</p>
+<p>ただし、C++17のアトミック操作のcompare-and-exchangeは、以下のようなコードに近い挙動になっている。</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb178-1" title="1"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;</a>
+<a class="sourceLine" id="cb178-2" title="2"><span class="dt">bool</span> compre_exchange( T &amp; current, T &amp; expected, T desired )</a>
+<a class="sourceLine" id="cb178-3" title="3">{</a>
+<a class="sourceLine" id="cb178-4" title="4">    <span class="dt">bool</span> result = ( <span class="bu">std::</span>memcmp( &amp;current, &amp;expected, <span class="kw">sizeof</span>(T) == <span class="dv">0</span> ) ;</a>
+<a class="sourceLine" id="cb178-5" title="5">    <span class="cf">if</span> ( result )</a>
+<a class="sourceLine" id="cb178-6" title="6">        <span class="bu">std::</span>memcpy( &amp;current, &amp;desired, <span class="kw">sizeof</span>(T) ) ;</a>
+<a class="sourceLine" id="cb178-7" title="7">    <span class="cf">else</span></a>
+<a class="sourceLine" id="cb178-8" title="8">        <span class="bu">std::</span>memcpy( &amp;expected, &amp;current, <span class="kw">sizeof</span>(T) ) ;</a>
+<a class="sourceLine" id="cb178-9" title="9"></a>
+<a class="sourceLine" id="cb178-10" title="10">    <span class="cf">return</span> result ;</a>
+<a class="sourceLine" id="cb178-11" title="11">}</a></code></pre></div>
+<p>比較には<code>operator ==</code>ではなく<code>std::memcmp</code>を使う。値をストアするには代入演算子ではなく<code>std::memcpy</code>を使う。つまり、バイト列で比較をして、バイト列でコピーをする。</p>
+<p>このような低級な挙動になっている理由は、ハードウェアのアトミック操作命令がこのようになっているためだ。</p>
+<p>この挙動では問題になる場合がある。</p>
+<ul>
+<li>pading</li>
+<li>浮動小数点数</li>
+</ul>
+<h3 id="パディング">パディング</h3>
+<p>パディングはオブジェクトの値を表現するためのバイト列の中に、使われていないビット列やバイト列が存在することだ。例えば以下のようなクラス型を考える。</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb179-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb179-2" title="2">{</a>
+<a class="sourceLine" id="cb179-3" title="3">    <span class="dt">char</span> c ;</a>
+<a class="sourceLine" id="cb179-4" title="4">    <span class="dt">int</span> i ;</a>
+<a class="sourceLine" id="cb179-5" title="5">} ;</a></code></pre></div>
+<p>筆者の環境では、<code>sizeof(char) == 1</code>かつ<code>sizeof(int) == 4</code>かつ<code>alignof(int) == 4</code>だ。int型のアライメント要求は4バイトなので、コンパイラーはアライメント調整のためにパディングバイトを設けなければならない。その結果、筆者の環境では<code>sizeof(S) == 8</code>となり、クラスSのメモリレイアウトは実際には以下のようになる。</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb180-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb180-2" title="2">{</a>
+<a class="sourceLine" id="cb180-3" title="3">    <span class="dt">char</span> c ;</a>
+<a class="sourceLine" id="cb180-4" title="4">    <span class="bu">std::</span>byte paddings[<span class="dv">3</span>] ;</a>
+<a class="sourceLine" id="cb180-5" title="5">    <span class="dt">int</span> i ;</a>
+<a class="sourceLine" id="cb180-6" title="6">} ;</a></code></pre></div>
+<p>paddingsはアライメントを調整するためだけに存在するバイト列だ。このバイト列は存在するが使われない。しかし、バイト列が存在するということは、その値を変えることができるということだ。パディングバイトを変更してみよう。</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb181-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb181-2" title="2">{</a>
+<a class="sourceLine" id="cb181-3" title="3">    <span class="dt">char</span> c ;</a>
+<a class="sourceLine" id="cb181-4" title="4">    <span class="dt">int</span> i ;</a>
+<a class="sourceLine" id="cb181-5" title="5">    <span class="co">// メンバーごとの比較を自動生成</span></a>
+<a class="sourceLine" id="cb181-6" title="6">    <span class="dt">bool</span> <span class="kw">operator</span> ==( <span class="at">const</span> S &amp; ) <span class="at">const</span> = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb181-7" title="7">} ;</a>
+<a class="sourceLine" id="cb181-8" title="8"></a>
+<a class="sourceLine" id="cb181-9" title="9"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb181-10" title="10">{</a>
+<a class="sourceLine" id="cb181-11" title="11">    S a{<span class="ch">&#39;x&#39;</span>, <span class="dv">123</span>} ;</a>
+<a class="sourceLine" id="cb181-12" title="12">    S b = a ;</a>
+<a class="sourceLine" id="cb181-13" title="13"></a>
+<a class="sourceLine" id="cb181-14" title="14">    <span class="bu">std::</span>byte * ptr = <span class="kw">reinterpret_cast</span>&lt;<span class="bu">std::</span>byte *&gt;(&amp;b) ;</a>
+<a class="sourceLine" id="cb181-15" title="15">    <span class="co">// パディングバイトを変更</span></a>
+<a class="sourceLine" id="cb181-16" title="16">    ptr[<span class="dv">1</span>] = <span class="bu">std::</span>byte( <span class="dt">int</span>(ptr[<span class="dv">1</span>]) + <span class="dv">1</span> ) ;</a>
+<a class="sourceLine" id="cb181-17" title="17"></a>
+<a class="sourceLine" id="cb181-18" title="18">    <span class="co">// 比較演算子による比較</span></a>
+<a class="sourceLine" id="cb181-19" title="19">    <span class="co">// true</span></a>
+<a class="sourceLine" id="cb181-20" title="20">    <span class="dt">bool</span> c = ( a == b ) ;</a>
+<a class="sourceLine" id="cb181-21" title="21">    <span class="co">// 生のバイト列による比較</span></a>
+<a class="sourceLine" id="cb181-22" title="22">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb181-23" title="23">    <span class="dt">bool</span> d = ( <span class="bu">std::</span>memcmp( &amp;a, &amp;b, <span class="kw">sizeof</span>(S) ) == <span class="dv">0</span> ) ;</a>
+<a class="sourceLine" id="cb181-24" title="24">}</a></code></pre></div>
+<p>このように、パディングバイトは通常のメンバーごとの比較では比較されないが、生のバイト列としては存在するので、比較演算子による比較と<code>std::memcmp</code>による比較の結果が異なる。</p>
+<h3 id="浮動小数点数">浮動小数点数</h3>
+<p>浮動小数点数のフォーマットは実装依存だが、最も普及しているIEE 754では、値を比較すると等しいと評価されるが生のバイト列が異なる表現とNaNがある。</p>
+<p>IEEE 754では<code>+0.0</code>と<code>-0.0</code>は別のバイト列で表現されるが、比較すると等しいと評価される。</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb182-1" title="1"><span class="dt">int</span> main()</a>
+<a class="sourceLine" id="cb182-2" title="2">{</a>
+<a class="sourceLine" id="cb182-3" title="3">    <span class="dt">double</span> a = +<span class="fl">0.0</span> ;</a>
+<a class="sourceLine" id="cb182-4" title="4">    <span class="dt">double</span> b = -<span class="fl">0.0</span> ;</a>
+<a class="sourceLine" id="cb182-5" title="5">    <span class="co">// true</span></a>
+<a class="sourceLine" id="cb182-6" title="6">    <span class="dt">bool</span> c = (a == b) ;</a>
+<a class="sourceLine" id="cb182-7" title="7">    <span class="co">// false</span></a>
+<a class="sourceLine" id="cb182-8" title="8">    <span class="dt">bool</span> d = (<span class="bu">std::</span>memcmp( &amp;a, &amp;b, <span class="kw">sizeof</span>(<span class="dt">double</span>)) == <span class="dv">0</span> ) ;</a>
+<a class="sourceLine" id="cb182-9" title="9">}</a></code></pre></div>
+<h3 id="c20での変更">C++20での変更</h3>
+<p>C++20ではパディングの問題が修正された。パディングを含む型の値の比較は単なる値を表現する生のバイト列ではなく値の比較により行われることになった。</p>
+<p>浮動小数点数の挙動は変わらないので注意が必要だ。</p>
+<h2 id="destroying-operator-delete">destroying operator delete</h2>
+<p>C++20にはdestroying operator deleteが追加された。これはクラスのメンバーとしてのoperator deleteの演算子オーバーロードで以下のような形になる。</p>
+<p>~~cpp struct A { void operator delete( A *, std::destroying_delete_t ) ; } ;</p>
+<p>struct B { void operator delete( void *, std::destroying_delete_t ) ; } ; ~~~</p>
+<p>destroying operator deleteの第一引数は、メンバーであるクラスへのポインター、もしくは<code>void *</code>、第二引数は<code>std::destroying_delete_t</code>型となる。</p>
+<p>第二引数は単にdestroying operator deleteを区別するためのタグ型で、以下のように定義されている。</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb183-1" title="1"><span class="kw">namespace</span> std {</a>
+<a class="sourceLine" id="cb183-2" title="2">    <span class="kw">struct</span> <span class="dt">destroying_delete_t</span> {</a>
+<a class="sourceLine" id="cb183-3" title="3">        <span class="kw">explicit</span> <span class="dt">destroying_delete_t</span>() = <span class="cf">default</span> ;</a>
+<a class="sourceLine" id="cb183-4" title="4">    } ;</a>
+<a class="sourceLine" id="cb183-5" title="5">    <span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">destroying_delete_t</span> destroying_delete{} ;</a>
+<a class="sourceLine" id="cb183-6" title="6">}</a></code></pre></div>
+<p><code>std::destroying_delete_t</code>がdestroying operator deleteの第二引数に使う型で、<code>std::destroying_delete</code>はdestroying operator deleteを明示的に呼び出したいときに使える<code>std::destroying_delete_t</code>型の便利な値だ。</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb184-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb184-2" title="2">{</a>
+<a class="sourceLine" id="cb184-3" title="3">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( S *, <span class="bu">std::</span>destroying_delete_t ) ;</a>
+<a class="sourceLine" id="cb184-4" title="4">} ;</a>
+<a class="sourceLine" id="cb184-5" title="5"></a>
+<a class="sourceLine" id="cb184-6" title="6"><span class="dt">void</span> f( S * p )</a>
+<a class="sourceLine" id="cb184-7" title="7">{</a>
+<a class="sourceLine" id="cb184-8" title="8">    S::<span class="kw">operator</span> <span class="kw">delete</span>( p, <span class="bu">std::</span>destroying_delete ) ;</a>
+<a class="sourceLine" id="cb184-9" title="9">}</a></code></pre></div>
+<p>クラスのメンバーとしてのdestroying operator deleteのオーバーロードは、従来のoperator deleteのメンバーでのオーバーロードとは決定的に異なる点がある。</p>
+<p>従来のoperator deleteに渡されるポインターの型はvoid *で、これはすでにデストラクターが呼び出されオブジェクトは破棄された後の生のストレージへの先頭のポインターとなっている。operator deleteが行うのは、生のストレージの解放処理だ。デストラクターの呼び出しをする責任はない。それはコンパイラーが行う。</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb185-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb185-2" title="2">{</a>
+<a class="sourceLine" id="cb185-3" title="3">    <span class="dt">void</span> * <span class="kw">operator</span> <span class="kw">new</span>( <span class="bu">std::</span>size_t size )</a>
+<a class="sourceLine" id="cb185-4" title="4">    {</a>
+<a class="sourceLine" id="cb185-5" title="5">        <span class="co">// 生のストレージへのポインターを返す</span></a>
+<a class="sourceLine" id="cb185-6" title="6">        <span class="co">// コンストラクター呼び出しをする責任はない</span></a>
+<a class="sourceLine" id="cb185-7" title="7">        <span class="cf">return</span> ::<span class="kw">operator</span> <span class="kw">new</span>( size ) ;</a>
+<a class="sourceLine" id="cb185-8" title="8">    }</a>
+<a class="sourceLine" id="cb185-9" title="9"></a>
+<a class="sourceLine" id="cb185-10" title="10">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( <span class="dt">void</span> * ptr )</a>
+<a class="sourceLine" id="cb185-11" title="11">    {</a>
+<a class="sourceLine" id="cb185-12" title="12">        <span class="co">// 生のストレージを解放する。</span></a>
+<a class="sourceLine" id="cb185-13" title="13">        <span class="co">// ptrはすでに破棄されている</span></a>
+<a class="sourceLine" id="cb185-14" title="14">        <span class="co">// デストラクター呼び出しをする責任はない</span></a>
+<a class="sourceLine" id="cb185-15" title="15">        ::<span class="kw">operator</span> <span class="kw">delete</span>( ptr ) ;</a>
+<a class="sourceLine" id="cb185-16" title="16">    }</a>
+<a class="sourceLine" id="cb185-17" title="17"></a>
+<a class="sourceLine" id="cb185-18" title="18">    <span class="co">// デストラクター</span></a>
+<a class="sourceLine" id="cb185-19" title="19">    ~S() { }</a>
+<a class="sourceLine" id="cb185-20" title="20">} ;</a></code></pre></div>
+<p>C++20で追加されたdestroying operator deleteでは、オブジェクトは破棄されないまま渡される。destorying operator deleteはデストラクター呼び出しをする責任を持つ。</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb186-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb186-2" title="2">{</a>
+<a class="sourceLine" id="cb186-3" title="3">    <span class="dt">void</span> * <span class="kw">operator</span> <span class="kw">new</span>( <span class="bu">std::</span>size_t size )</a>
+<a class="sourceLine" id="cb186-4" title="4">    {</a>
+<a class="sourceLine" id="cb186-5" title="5">        <span class="cf">return</span> ::<span class="kw">operator</span> <span class="kw">new</span>( size ) ;</a>
+<a class="sourceLine" id="cb186-6" title="6">    }</a>
+<a class="sourceLine" id="cb186-7" title="7">    </a>
+<a class="sourceLine" id="cb186-8" title="8">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( S * ptr, <span class="bu">std::</span>destroying_delete_t )</a>
+<a class="sourceLine" id="cb186-9" title="9">    {</a>
+<a class="sourceLine" id="cb186-10" title="10">        <span class="co">// デストラクター呼び出しをする責任を持つ </span></a>
+<a class="sourceLine" id="cb186-11" title="11">        ptr-&gt;~S() ;</a>
+<a class="sourceLine" id="cb186-12" title="12">        <span class="co">// 生のストレージの解放</span></a>
+<a class="sourceLine" id="cb186-13" title="13">        ::<span class="kw">operator</span> <span class="kw">delete</span>( ptr ) ;</a>
+<a class="sourceLine" id="cb186-14" title="14">    }</a>
+<a class="sourceLine" id="cb186-15" title="15"></a>
+<a class="sourceLine" id="cb186-16" title="16">    <span class="co">// デストラクター</span></a>
+<a class="sourceLine" id="cb186-17" title="17">    ~S(){}</a>
+<a class="sourceLine" id="cb186-18" title="18">} ;</a></code></pre></div>
+<p>そのため、destroying operator deleteの第一引数は<code>void *</code>の他にクラスへのポインター型でもよい。<code>void *</code>型の場合でも参照先のオブジェクトは破棄されていないので、destroing operator deleteはデストラクター呼び出しに責任を持つ必要がある。</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb187-1" title="1"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb187-2" title="2">{</a>
+<a class="sourceLine" id="cb187-3" title="3">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( <span class="dt">void</span> * ptr, <span class="bu">std::</span>destroying_delete_t )</a>
+<a class="sourceLine" id="cb187-4" title="4">    {</a>
+<a class="sourceLine" id="cb187-5" title="5">        <span class="co">// デストラクター呼び出し</span></a>
+<a class="sourceLine" id="cb187-6" title="6">        <span class="kw">auto</span> <span class="va">s_ptr</span> = <span class="kw">reinterpret_cast</span>&lt;S *&gt;(ptr) ;</a>
+<a class="sourceLine" id="cb187-7" title="7">        s:ptr-&gt;~S() ;</a>
+<a class="sourceLine" id="cb187-8" title="8"></a>
+<a class="sourceLine" id="cb187-9" title="9">        <span class="co">// 生のストレージの解放処理</span></a>
+<a class="sourceLine" id="cb187-10" title="10">    }</a>
+<a class="sourceLine" id="cb187-11" title="11">} ;</a></code></pre></div>
+<p>解放関数のオーバーロードが複数ある場合のオーバーロード解決については、destroying operator deleteが最も優先される。</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb188-1" title="1"><span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( <span class="dt">void</span> * ) ;</a>
+<a class="sourceLine" id="cb188-2" title="2"></a>
+<a class="sourceLine" id="cb188-3" title="3"><span class="kw">struct</span> S</a>
+<a class="sourceLine" id="cb188-4" title="4">{</a>
+<a class="sourceLine" id="cb188-5" title="5">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( <span class="dt">void</span> * ) ;</a>
+<a class="sourceLine" id="cb188-6" title="6">    <span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span>( S *, <span class="bu">std::</span>destroying_delete_t ) ;</a>
+<a class="sourceLine" id="cb188-7" title="7">} ;</a></code></pre></div>
+<p>このような型Sへのポインターをdeleteした場合、destroying operator deleteが呼ばれる。</p>
+<p>配列のdeleteにおいてdestroying operator deleteが使われることはない。</p>
+<h3 id="応用">応用</h3>
+<p>以下のようなクラスを考える。</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 </body>
 </html>
